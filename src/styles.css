@@ -1,13 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 @import "reset-styles.css";
-
 * {
   box-sizing: border-box;
   font-family: inherit;
 }
 
 body {
-  font-family: 'Inter', 'sans-serif';
+  font-family: "Inter", "sans-serif";
 }
 
 .container {
@@ -15,3 +14,5 @@ body {
   margin: auto;
   padding-block: 2rem;
 }
+
+/*# sourceMappingURL=styles.css.map */

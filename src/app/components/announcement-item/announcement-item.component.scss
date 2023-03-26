@@ -1,0 +1,55 @@
+.announcement-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  color: inherit;
+
+  &:hover > &__img {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  &__img {
+    width: 100%;
+    padding-bottom: 73%;
+    position: relative;
+    transition: .5s;
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 0.5rem;
+    }
+  }
+
+  &__title {
+    margin: 0.5rem 0 0;
+    font-size: 1.1rem;
+    line-height: 1.5rem;
+    font-weight: 600;
+    color: #3B82F6;
+  }
+
+  &__price {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.5rem;
+    font-weight: 600;
+  }
+
+  &__location {
+    color: #64748B;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+  }
+
+  &__time {
+    color: #64748B;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+  }
+}

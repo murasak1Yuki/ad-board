@@ -1,0 +1,9 @@
+<a class="announcement-item" href="#">
+  <div class="announcement-item__img">
+    <img [src]="product.image" alt="{{ product.title }}" />
+  </div>
+  <p class="announcement-item__title">{{ product.title }}</p>
+  <p class="announcement-item__price">{{ product.price | currency }}</p>
+  <p class="announcement-item__location">{{ product.location }}</p>
+  <p class="announcement-item__time">{{ product.time }}</p>
+</a>
