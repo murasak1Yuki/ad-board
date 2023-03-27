@@ -46,3 +46,17 @@
     background-color: #2f68c5;
   }
 }
+
+@media (max-width: 1399.98px) {
+  .header-wrapper {
+    padding-inline: 0.8rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .header-buttons {
+    span {
+      display: none;
+    }
+  }
+}

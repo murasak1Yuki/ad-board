@@ -82,3 +82,41 @@
     background-color: #2f68c5;
   }
 }
+
+@media (max-width: 1399.98px) {
+  .announcement-container {
+    padding-inline: 0.8rem;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .announcement-heading {
+    &__title {
+      font-size: 1.8rem;
+    }
+
+    span {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: 767.98px) {
+  .announcement-heading {
+    &__title {
+      margin-right: 0;
+    }
+
+    &__form-container {
+      flex-basis: 100%;
+    }
+  }
+}
+
+@media (max-width: 575.98px) {
+  .announcement-heading {
+    input::placeholder {
+      font-size: 0.8rem;
+    }
+  }
+}
