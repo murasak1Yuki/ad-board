@@ -1,17 +1,11 @@
-<app-header></app-header>
-<body>
-<main>
-  <app-announcement-heading></app-announcement-heading>
-  <div class="container">
-    <h4 class="recommendations-title">
-      Рекомендации для вас
-    </h4>
-    <div class="announcements-grid">
-      <app-announcement-item
-        *ngFor="let product of products"
-        [product]="product"
-      ></app-announcement-item>
-    </div>
+<div class="container">
+  <h4 class="recommendations-title">
+    Рекомендации для вас
+  </h4>
+  <div class="announcements-grid">
+    <app-announcement-item
+      *ngFor="let product of products"
+      [product]="product"
+    ></app-announcement-item>
   </div>
-</main>
-</body>
+</div>

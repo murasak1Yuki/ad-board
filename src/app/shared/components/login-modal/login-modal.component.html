@@ -1,0 +1,49 @@
+<ng-container *ngIf="loginMode; else registrationMode">
+  <form (ngSubmit)="onSubmit()" [formGroup]="authForm">
+    <div class="flex flex-column mb-3">
+      <input
+        class="mb-3 "
+        formControlName="phone"
+        pInputText
+        placeholder="Номер телефона"
+        type="tel">
+      <input
+        formControlName="password"
+        pInputText
+        placeholder="Пароль"
+        type="password">
+    </div>
+    <div class="flex justify-content-center gap-3">
+      <button [disabled]="!authForm.valid" label="Войти" pButton type="submit"></button>
+      <button (click)="switchMode()" class="p-button-text" label="Регистрация" pButton type="button"></button>
+    </div>
+  </form>
+</ng-container>
+<ng-template #registrationMode>
+  <form (ngSubmit)="onSubmit()" [formGroup]="authForm">
+    <div class="flex flex-column mb-3">
+      <input
+        class="mb-3"
+        formControlName="phone"
+        pInputText
+        placeholder="Номер телефона"
+        type="tel">
+      <input
+        class="mb-3"
+        formControlName="password"
+        pInputText
+        placeholder="Пароль"
+        type="password">
+      <input
+        formControlName="passwordConfirmation"
+        pInputText
+        placeholder="Подтвердите пароль"
+        type="password">
+    </div>
+    <div class="flex flex-wrap justify-content-center gap-3">
+      <button [disabled]="!authForm.valid" label="Зарегистрироваться" pButton type="submit"></button>
+      <button (click)="switchMode()" class="p-button-text" label="Вход" pButton type="button"></button>
+    </div>
+  </form>
+</ng-template>
+

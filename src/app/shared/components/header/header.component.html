@@ -1,0 +1,34 @@
+<header class="header">
+  <div class="header-wrapper">
+
+    <ng-container *ngIf="isAuthenticated; else notAuthenticated" class="header-buttons">
+      <p-menu #menu [model]="menuItems" [popup]="true"></p-menu>
+
+      <button (click)="menu.toggle($event)" class="p-button-text header-buttons__login-btn" pButton>
+        <i class="pi pi-user"></i>
+        <span>
+          Александр
+          <i class="pi pi-chevron-down"></i>
+        </span>
+      </button>
+
+      <button class="header-buttons__add-btn" pButton routerLink="/create-announcement">
+        <span>Новое объявление</span>
+        <i class="pi pi-plus"></i>
+      </button>
+    </ng-container>
+
+    <ng-template #notAuthenticated class="header-buttons">
+      <button (click)="showAuthDialog()" class="p-button-text header-buttons__login-btn" pButton>
+        <i class="pi pi-user"></i>
+        <span>Войти</span>
+      </button>
+      <button (click)="showAuthDialog()" class="header-buttons__add-btn" pButton>
+        <span>Новое объявление</span>
+        <i class="pi pi-plus"></i>
+      </button>
+    </ng-template>
+
+  </div>
+</header>
+
