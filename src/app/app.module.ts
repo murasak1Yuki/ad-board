@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MenuModule } from 'primeng/menu';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { AppRoutingModule } from './app-routing.module';
 
@@ -39,6 +40,7 @@ import { CreateAnnouncementComponent } from './pages/create-announcement/create-
     ButtonModule,
     InputTextModule,
     DynamicDialogModule,
+    ProgressSpinnerModule,
     AppRoutingModule,
   ],
   providers: [DialogService],

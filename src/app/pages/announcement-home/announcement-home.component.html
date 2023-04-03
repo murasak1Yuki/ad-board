@@ -1,11 +1,19 @@
 <div class="container">
-  <h4 class="recommendations-title">
-    Рекомендации для вас
-  </h4>
-  <div class="announcements-grid">
-    <app-announcement-item
-      *ngFor="let product of products"
-      [product]="product"
-    ></app-announcement-item>
-  </div>
+  <h4 class="recommendations-title">Рекомендации для вас</h4>
+  <ng-container *ngIf="products.length >= 1 && !productsService.isFetching">
+    <div class="announcements-grid">
+      <app-announcement-item
+        *ngFor="let product of products"
+        [product]="product"
+      ></app-announcement-item>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="products.length < 1 && !productsService.isFetching">
+    Нет доступных объявлений!
+  </ng-container>
+
+  <ng-container *ngIf="productsService.isFetching">
+    <p-progressSpinner class="flex justify-content-center align-content-center"></p-progressSpinner>
+  </ng-container>
 </div>

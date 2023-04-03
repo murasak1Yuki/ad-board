@@ -1,11 +1,12 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import {Product} from '../models/product.model';
+import { Product } from '../models/product.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductsService {
+  isFetching: boolean = false;
   private products: Product[] = [
     new Product(
       'https://clck.ru/33sWsE',
@@ -121,10 +122,14 @@ export class ProductsService {
     ),
   ];
 
-  constructor() {
-  }
+  constructor() {}
 
-  getProducts(): Product[] {
-    return this.products.slice();
+  getProducts(): Promise<Product[]> {
+    this.isFetching = true;
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(this.products.slice());
+      }, 2000);
+    });
   }
 }
