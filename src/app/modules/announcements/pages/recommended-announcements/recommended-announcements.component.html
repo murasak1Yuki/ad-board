@@ -1,19 +1,19 @@
 <div class="container">
   <h4 class="recommendations-title">Рекомендации для вас</h4>
-  <ng-container *ngIf="products.length >= 1 && !productsService.isFetching">
+  <ng-container *ngIf="announcements.length >= 1 && !isLoading">
     <div class="announcements-grid">
       <app-announcement-item
-        *ngFor="let product of products"
-        [product]="product"
+        *ngFor="let announcement of announcements"
+        [announcement]="announcement"
       ></app-announcement-item>
     </div>
   </ng-container>
 
-  <ng-container *ngIf="products.length < 1 && !productsService.isFetching">
+  <ng-container *ngIf="announcements.length < 1 && !isLoading">
     Нет доступных объявлений!
   </ng-container>
 
-  <ng-container *ngIf="productsService.isFetching">
+  <ng-container *ngIf="isLoading">
     <p-progressSpinner class="flex justify-content-center align-content-center"></p-progressSpinner>
   </ng-container>
 </div>

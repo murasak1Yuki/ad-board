@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { Product } from '@data/models/product.model';
+import { Component, Input, NgModule } from '@angular/core';
+import { Announcement } from '../../announcement.model';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-announcement-item',
@@ -7,5 +8,16 @@ import { Product } from '@data/models/product.model';
   styleUrls: ['./announcement-item.component.scss'],
 })
 export class AnnouncementItemComponent {
-  @Input() product!: Product;
+  @Input() announcement!: Announcement;
+
+  get price() {
+    return this.announcement.price.replace(/\s/g, '');
+  }
 }
+
+@NgModule({
+  declarations: [AnnouncementItemComponent],
+  imports: [CurrencyPipe, DatePipe],
+  exports: [AnnouncementItemComponent],
+})
+export class AnnouncementItemModule {}

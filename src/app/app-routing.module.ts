@@ -1,12 +1,22 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AnnouncementHomeComponent } from './pages/announcement-home/announcement-home.component';
-import { CreateAnnouncementComponent } from './pages/create-announcement/create-announcement.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/announcement-home', pathMatch: 'full' },
-  { path: 'announcement-home', component: AnnouncementHomeComponent },
-  { path: 'create-announcement', component: CreateAnnouncementComponent },
+  { path: '', redirectTo: '/recommended-announcements', pathMatch: 'full' },
+  {
+    path: 'recommended-announcements',
+    loadChildren: () =>
+      import('./modules/announcements/announcements.module').then(
+        (m) => m.AnnouncementsModule
+      ),
+  },
+  {
+    path: 'create-announcement',
+    loadChildren: () =>
+      import('./modules/create-announcement/create-announcement.module').then(
+        (m) => m.CreateAnnouncementModule
+      ),
+  },
 ];
 
 @NgModule({
