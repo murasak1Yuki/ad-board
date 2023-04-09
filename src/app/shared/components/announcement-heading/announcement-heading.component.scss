@@ -29,17 +29,12 @@
     padding: 0.5rem 0.8rem;
     margin-right: 0.8rem;
     gap: 0.5rem;
-    transition: background-color 0.3s ease-in-out;
     font-size: 0.9rem;
     color: #3B82F6;
     line-height: 1.3rem;
     border: 0.06rem solid #3B82F6;
     border-radius: 0.3rem;
     background: white;
-  }
-
-  &__category-btn:hover {
-    background-color: #ebf3fe;
   }
 
   &__search-form {
@@ -69,17 +64,9 @@
     align-items: center;
     padding: 0.5rem 0.8rem;
     gap: 0.5rem;
-    transition: background-color 0.3s ease-in-out;
-    color: white;
     font-size: 0.9rem;
     line-height: 1.3rem;
-    background: #3B82F6;
     border-radius: 0 0.5rem 0.5rem 0;
-    border: 0.06rem solid #3B82F6;
-  }
-
-  &__search-btn:hover {
-    background-color: #2f68c5;
   }
 }
 

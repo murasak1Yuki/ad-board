@@ -1,11 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  NgModule,
+  OnInit,
+} from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-login-modal',
   templateUrl: './login-modal.component.html',
   styleUrls: ['./login-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginModalComponent implements OnInit {
   authForm!: FormGroup;
@@ -47,3 +61,10 @@ export class LoginModalComponent implements OnInit {
     this.initForm();
   }
 }
+
+@NgModule({
+  declarations: [LoginModalComponent],
+  imports: [ReactiveFormsModule, InputTextModule, ButtonModule, NgIf],
+  exports: [LoginModalComponent],
+})
+export class LoginModalModule {}

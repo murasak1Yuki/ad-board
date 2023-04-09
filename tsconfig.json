@@ -24,7 +24,8 @@
       "dom"
     ],
     "paths": {
-      "@data/*": ["src/app/data/*"],
+      "@shared/*" : ["src/app/shared/*"],
+      "@announcements-pages/*": ["src/app/modules/announcements/pages/*"]
     }
   },
   "angularCompilerOptions": {

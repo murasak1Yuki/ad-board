@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-
-import { Announcement } from './announcement.model';
 import { HttpClient } from '@angular/common/http';
 import { Subject, tap } from 'rxjs';
+
+import { Announcement } from './announcement.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,12 +14,12 @@ export class AnnouncementsService {
   constructor(private _http: HttpClient) {}
 
   getAnnouncements(): Announcement[] {
-    return this.announcements.slice();
+    return [...this.announcements];
   }
 
   setAnnouncements(announcements: Announcement[]) {
     this.announcements = announcements;
-    this.announcementsChanged.next(this.announcements.slice());
+    this.announcementsChanged.next([...this.announcements]);
   }
 
   fetchAnnouncements() {

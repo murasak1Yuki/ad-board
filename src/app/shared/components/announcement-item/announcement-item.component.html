@@ -1,9 +1,21 @@
-<a class="announcement-item" href="#">
-  <div class="announcement-item__img">
-    <img [src]="announcement.images[0]" alt="{{ announcement.name }}"/>
+<ng-container *ngIf="announcement; else skeleton">
+  <a class="announcement-item" href="#">
+    <div class="announcement-item__img">
+      <img [src]="announcement.images[0]" alt="{{ announcement.name }}"/>
+    </div>
+    <p class="announcement-item__title">{{ announcement.name }}</p>
+    <p class="announcement-item__price">{{ price | currency }}</p>
+    <p class="announcement-item__location">{{ announcement.location }}</p>
+    <p class="announcement-item__time">{{ +announcement.date * 1000 | date:'MM/dd/yyyy'}}</p>
+  </a>
+</ng-container>
+
+<ng-template #skeleton>
+  <div class="announcement-item">
+    <p-skeleton height="220px" styleClass="mb-2" width="100%"></p-skeleton>
+    <p-skeleton height="22px" styleClass="mb-2" width="80%"></p-skeleton>
+    <p-skeleton height="22px" styleClass="mb-2" width="60%"></p-skeleton>
+    <p-skeleton height="16px" styleClass="mb-2" width="50%"></p-skeleton>
+    <p-skeleton height="16px" width="40%"></p-skeleton>
   </div>
-  <p class="announcement-item__title">{{ announcement.name }}</p>
-  <p class="announcement-item__price">{{ price | currency }}</p>
-  <p class="announcement-item__location">{{ announcement.location }}</p>
-  <p class="announcement-item__time">{{ +announcement.date * 1000 | date:'MM/dd/yyyy'}}</p>
-</a>
+</ng-template>

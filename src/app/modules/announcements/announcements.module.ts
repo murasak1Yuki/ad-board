@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 import { AnnouncementsRoutingModule } from './announcements-routing.module';
-import { RecommendedAnnouncementsComponent } from './pages/recommended-announcements/recommended-announcements.component';
-import { AnnouncementItemModule } from '../../shared/components/announcement-item/announcement-item.component';
+import { AnnouncementItemModule } from '@shared/components/announcement-item/announcement-item.component';
+import {
+  RecommendedAnnouncementsComponent
+} from '@announcements-pages/recommended-announcements/recommended-announcements.component';
 
 @NgModule({
   declarations: [RecommendedAnnouncementsComponent],

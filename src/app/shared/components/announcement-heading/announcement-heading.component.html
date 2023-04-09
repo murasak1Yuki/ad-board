@@ -2,11 +2,8 @@
   <div class="announcement-container container">
     <h3 class="announcement-heading__title">Доска объявлений</h3>
     <div class="announcement-heading__form-container">
-      <button class="announcement-heading__category-btn">
-        <img
-          alt="categories"
-          class="announcement-heading__category-btn-icon"
-          ngSrc="assets/img/categories.svg" height="12" width="20">
+      <button pButton class="announcement-heading__category-btn">
+        <i class="pi pi-list"></i>
         <span class="announcement-heading__category-btn-text">
           Все категории
         </span>
@@ -16,12 +13,9 @@
           class="announcement-heading__search-input"
           placeholder="Поиск по объявлениям"
           type="text">
-        <button class="announcement-heading__search-btn" type="submit">
+        <button pButton class="announcement-heading__search-btn">
           <span class="announcement-heading__search-btn-text">Найти</span>
-          <img
-            alt="search"
-            class="announcement-heading__search-btn-icon"
-            ngSrc="assets/img/search.svg" height="16" width="16">
+          <i class="pi pi-search pr-2"></i>
         </button>
       </form>
     </div>

@@ -1,12 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  NgModule,
+  OnInit,
+} from '@angular/core';
 import { MenuItem } from 'primeng/api';
+import { NgIf } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
+import { MenuModule } from 'primeng/menu';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+
 import { LoginModalComponent } from '../login-modal/login-modal.component';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit {
   ref!: DynamicDialogRef;
@@ -43,3 +53,10 @@ export class HeaderComponent implements OnInit {
     });
   }
 }
+
+@NgModule({
+  declarations: [HeaderComponent],
+  imports: [MenuModule, ButtonModule, NgIf],
+  exports: [HeaderComponent],
+})
+export class HeaderModule {}
