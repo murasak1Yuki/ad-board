@@ -25,6 +25,8 @@
     ],
     "paths": {
       "@shared/*" : ["src/app/shared/*"],
+      "@models/*" : ["src/app/core/models/*"],
+      "@services/*" : ["src/app/core/services/*"],
       "@announcements-pages/*": ["src/app/modules/announcements/pages/*"]
     }
   },

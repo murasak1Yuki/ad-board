@@ -1,13 +1,14 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnDestroy,
   OnInit,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { AnnouncementsService } from '@shared/announcements.service';
-import { Announcement } from '@shared/announcement.model';
+import { AnnouncementsService } from '@services/announcements.service';
+import { Announcement } from '@models/announcement.model';
 
 @Component({
   selector: 'app-recommended-announcements',
@@ -21,7 +22,10 @@ export class RecommendedAnnouncementsComponent implements OnInit, OnDestroy {
   announcementsSub!: Subscription;
   skeletonArr = new Array(16);
 
-  constructor(private readonly _productsService: AnnouncementsService, private _cdr: ChangeDetectorRef) {}
+  constructor(
+    private readonly _announcementsService: AnnouncementsService,
+    private _cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.loadAnnouncements();
@@ -33,14 +37,15 @@ export class RecommendedAnnouncementsComponent implements OnInit, OnDestroy {
 
   loadAnnouncements() {
     this.isLoading = true;
-    this._productsService.fetchAnnouncements().subscribe(() => {
+    this._announcementsService.fetchAnnouncements().subscribe(() => {
       this.isLoading = false;
     });
     this.announcementsSub =
-      this._productsService.announcementsChanged.subscribe((announcements) => {
-        this.announcements = announcements;
-        this._cdr.markForCheck();
-      });
-    this.announcements = this._productsService.getAnnouncements();
+      this._announcementsService.announcementsChanged$.subscribe(
+        (announcements) => {
+          this.announcements = announcements;
+          this._cdr.markForCheck();
+        }
+      );
   }
 }

@@ -1,26 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Subject, tap } from 'rxjs';
+import { Observable, Subject, tap } from 'rxjs';
 
-import { Announcement } from './announcement.model';
+import { Announcement } from '@models/announcement.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AnnouncementsService {
-  announcementsChanged = new Subject<Announcement[]>();
-  private announcements: Announcement[] = [];
+  private _announcementsChanged = new Subject<Announcement[]>();
+  announcementsChanged$: Observable<Announcement[]> = this._announcementsChanged.asObservable();
+  private _announcements: Announcement[] = [];
 
   constructor(private _http: HttpClient) {}
-
-  getAnnouncements(): Announcement[] {
-    return [...this.announcements];
-  }
-
-  setAnnouncements(announcements: Announcement[]) {
-    this.announcements = announcements;
-    this.announcementsChanged.next([...this.announcements]);
-  }
 
   fetchAnnouncements() {
     return this._http
@@ -32,5 +24,10 @@ export class AnnouncementsService {
           this.setAnnouncements(announcements);
         })
       );
+  }
+
+  private setAnnouncements(announcements: Announcement[]) {
+    this._announcements = announcements;
+    this._announcementsChanged.next(this._announcements);
   }
 }

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, NgModule } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-announcement-heading',
@@ -11,7 +12,7 @@ export class AnnouncementHeadingComponent {}
 
 @NgModule({
   declarations: [AnnouncementHeadingComponent],
-  imports: [ButtonModule],
+  imports: [ButtonModule, RouterLink],
   exports: [AnnouncementHeadingComponent],
 })
 export class AnnouncementHeadingModule {}

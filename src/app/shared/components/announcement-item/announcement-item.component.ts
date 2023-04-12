@@ -7,7 +7,7 @@ import {
 import { CurrencyPipe, DatePipe, NgIf } from '@angular/common';
 import { SkeletonModule } from 'primeng/skeleton';
 
-import { Announcement } from '../../announcement.model';
+import { Announcement } from '@models/announcement.model';
 
 @Component({
   selector: 'app-announcement-item',

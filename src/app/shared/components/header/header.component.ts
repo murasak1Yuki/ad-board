@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   NgModule,
   OnInit,
@@ -23,7 +24,10 @@ export class HeaderComponent implements OnInit {
   menuItems!: MenuItem[];
   isAuthenticated: boolean = false;
 
-  constructor(private _dialogService: DialogService) {}
+  constructor(
+    private _dialogService: DialogService,
+    private _cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.menuItems = [
@@ -35,6 +39,7 @@ export class HeaderComponent implements OnInit {
       },
       {
         label: 'Выйти',
+        command: () => (this.isAuthenticated = false),
       },
     ];
   }
@@ -50,6 +55,7 @@ export class HeaderComponent implements OnInit {
 
     this.ref.onClose.subscribe((isAuthenticated: boolean) => {
       this.isAuthenticated = isAuthenticated;
+      this._cdr.markForCheck();
     });
   }
 }

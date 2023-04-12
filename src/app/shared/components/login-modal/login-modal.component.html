@@ -2,16 +2,20 @@
   <form (ngSubmit)="onSubmit()" [formGroup]="authForm">
     <div class="flex flex-column mb-3">
       <input
-        class="mb-3 "
-        formControlName="phone"
+        class="mb-3"
+        formControlName="email"
         pInputText
-        placeholder="Номер телефона"
-        type="tel">
-      <input
+        placeholder="Почта"
+        type="email">
+      <p-password
+        [feedback]="false"
+        [inputStyle]="{'width':'100%'}"
+        [style]="{'width':'100%'}"
+        [toggleMask]="true"
+        class="mb-3"
         formControlName="password"
-        pInputText
-        placeholder="Пароль"
-        type="password">
+        placeholder="Пароль">
+      </p-password>
     </div>
     <div class="flex justify-content-center gap-3">
       <button [disabled]="!authForm.valid" label="Войти" pButton type="submit"></button>
@@ -24,21 +28,35 @@
     <div class="flex flex-column mb-3">
       <input
         class="mb-3"
-        formControlName="phone"
+        formControlName="email"
         pInputText
-        placeholder="Номер телефона"
-        type="tel">
-      <input
+        placeholder="Почта"
+        type="email">
+      <p-password
+        [feedback]="false"
+        [inputStyle]="{'width':'100%'}"
+        [style]="{'width':'100%'}"
+        [toggleMask]="true"
         class="mb-3"
         formControlName="password"
-        pInputText
-        placeholder="Пароль"
-        type="password">
-      <input
+        placeholder="Пароль">
+      </p-password>
+      <p-password
+        [feedback]="false"
+        [inputStyle]="{'width':'100%'}"
+        [style]="{'width':'100%'}"
+        [toggleMask]="true"
+        aria-describedby="password-confirmation-help"
         formControlName="passwordConfirmation"
-        pInputText
-        placeholder="Подтвердите пароль"
-        type="password">
+        placeholder="Подтвердите пароль">
+      </p-password>
+      <small
+        *ngIf="authForm.get('passwordConfirmation')!.hasError('passwordMismatch')
+        && authForm.get('passwordConfirmation')!.touched"
+        class="p-error"
+        id="password-confirmation-help">
+        Пароли не совпадают
+      </small>
     </div>
     <div class="flex flex-wrap justify-content-center gap-3">
       <button [disabled]="!authForm.valid" label="Зарегистрироваться" pButton type="submit"></button>
