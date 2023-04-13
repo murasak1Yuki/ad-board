@@ -1,6 +1,6 @@
 <ng-container *ngIf="loginMode; else registrationMode">
   <form (ngSubmit)="onSubmit()" [formGroup]="authForm">
-    <div class="flex flex-column mb-3">
+    <div class="flex flex-column mb-4">
       <input
         class="mb-3"
         formControlName="email"
@@ -12,7 +12,6 @@
         [inputStyle]="{'width':'100%'}"
         [style]="{'width':'100%'}"
         [toggleMask]="true"
-        class="mb-3"
         formControlName="password"
         placeholder="Пароль">
       </p-password>
@@ -25,7 +24,7 @@
 </ng-container>
 <ng-template #registrationMode>
   <form (ngSubmit)="onSubmit()" [formGroup]="authForm">
-    <div class="flex flex-column mb-3">
+    <div class="flex flex-column mb-4">
       <input
         class="mb-3"
         formControlName="email"
@@ -46,16 +45,16 @@
         [inputStyle]="{'width':'100%'}"
         [style]="{'width':'100%'}"
         [toggleMask]="true"
-        aria-describedby="password-confirmation-help"
         formControlName="passwordConfirmation"
+        aria-describedby="password-confirmation-help"
         placeholder="Подтвердите пароль">
       </p-password>
       <small
-        *ngIf="authForm.get('passwordConfirmation')!.hasError('passwordMismatch')
+        *ngIf="authForm!.hasError('passwordMismatch')
         && authForm.get('passwordConfirmation')!.touched"
-        class="p-error"
-        id="password-confirmation-help">
-        Пароли не совпадают
+        id="password-confirmation-help"
+        class="p-error pt-1 pl-2">
+        Пароли не совпадают.
       </small>
     </div>
     <div class="flex flex-wrap justify-content-center gap-3">

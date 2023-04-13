@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, Subject, tap } from 'rxjs';
 
 import { Announcement } from '@models/announcement.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -16,17 +17,15 @@ export class AnnouncementsService {
 
   fetchAnnouncements() {
     return this._http
-      .get<Announcement[]>(
-        'https://announcements-board-default-rtdb.europe-west1.firebasedatabase.app/products.json'
-      )
+      .get<Announcement[]>(environment.BASE_URL + '/products.json')
       .pipe(
         tap((announcements) => {
-          this.setAnnouncements(announcements);
+          this._setAnnouncements(announcements);
         })
       );
   }
 
-  private setAnnouncements(announcements: Announcement[]) {
+  private _setAnnouncements(announcements: Announcement[]) {
     this._announcements = announcements;
     this._announcementsChanged.next(this._announcements);
   }

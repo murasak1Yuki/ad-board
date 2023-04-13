@@ -20,9 +20,9 @@ import { LoginModalComponent } from '../login-modal/login-modal.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit {
-  ref!: DynamicDialogRef;
   menuItems!: MenuItem[];
   isAuthenticated: boolean = false;
+  private _ref!: DynamicDialogRef;
 
   constructor(
     private _dialogService: DialogService,
@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit {
   }
 
   showAuthDialog() {
-    this.ref = this._dialogService.open(LoginModalComponent, {
+    this._ref = this._dialogService.open(LoginModalComponent, {
       dismissableMask: true,
       width: '100%',
       style: {
@@ -53,7 +53,7 @@ export class HeaderComponent implements OnInit {
       },
     });
 
-    this.ref.onClose.subscribe((isAuthenticated: boolean) => {
+    this._ref.onClose.subscribe((isAuthenticated: boolean) => {
       this.isAuthenticated = isAuthenticated;
       this._cdr.markForCheck();
     });

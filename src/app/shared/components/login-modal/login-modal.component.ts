@@ -5,9 +5,11 @@ import {
   OnInit,
 } from '@angular/core';
 import {
+  AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -33,6 +35,10 @@ export class LoginModalComponent implements OnInit {
     _config.header = 'Авторизация';
   }
 
+  ngOnInit() {
+    this._initForm();
+  }
+
   onSubmit() {
     this._dialogRef.close(true);
   }
@@ -40,10 +46,10 @@ export class LoginModalComponent implements OnInit {
   switchMode() {
     this.loginMode = !this.loginMode;
     this._config.header = this.loginMode ? 'Авторизация' : 'Регистрация';
-    this.initForm();
+    this._initForm();
   }
 
-  initForm() {
+  private _initForm() {
     if (this.loginMode) {
       this.authForm = new FormGroup({
         email: new FormControl(null, [Validators.required, Validators.email]),
@@ -53,32 +59,36 @@ export class LoginModalComponent implements OnInit {
         ]),
       });
     } else {
-      this.authForm = new FormGroup({
-        email: new FormControl(null, [Validators.required, Validators.email]),
-        password: new FormControl(null, [
-          Validators.required,
-          Validators.minLength(6),
-        ]),
-        passwordConfirmation: new FormControl(null, [
-          Validators.required,
-          this.passwordsMatchValidator.bind(this),
-        ]),
-      });
+      this.authForm = new FormGroup(
+        {
+          email: new FormControl(null, [Validators.required, Validators.email]),
+          password: new FormControl(null, [
+            Validators.required,
+            Validators.minLength(6),
+          ]),
+          passwordConfirmation: new FormControl(null, [Validators.required]),
+        },
+        {
+          validators: [this._passwordsMatchValidator],
+        }
+      );
     }
   }
 
-  ngOnInit() {
-    this.initForm();
-  }
+  private _passwordsMatchValidator(
+    form: AbstractControl
+  ): ValidationErrors | null {
+    const { password, passwordConfirmation } = form.value;
+    const passwordConfirmationControl = form.get('passwordConfirmation');
 
-  private passwordsMatchValidator(
-    control: FormControl
-  ): { [s: string]: boolean } | null {
-    const password = this.authForm.value.password;
-    const passwordConfirmation = control.value;
-    return password === passwordConfirmation
-      ? null
-      : { passwordMismatch: true };
+    const errors =
+      password === passwordConfirmation || (!password && !passwordConfirmation)
+        ? null
+        : { passwordMismatch: true };
+
+    passwordConfirmationControl?.setErrors(errors);
+
+    return errors;
   }
 }
 

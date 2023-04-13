@@ -19,28 +19,28 @@ import { Announcement } from '@models/announcement.model';
 export class RecommendedAnnouncementsComponent implements OnInit, OnDestroy {
   announcements: Announcement[] = [];
   isLoading = false;
-  announcementsSub!: Subscription;
   skeletonArr = new Array(16);
+  private _announcementsSub!: Subscription;
 
   constructor(
-    private readonly _announcementsService: AnnouncementsService,
+    private _announcementsService: AnnouncementsService,
     private _cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this.loadAnnouncements();
+    this._loadAnnouncements();
   }
 
   ngOnDestroy() {
-    this.announcementsSub.unsubscribe();
+    this._announcementsSub.unsubscribe();
   }
 
-  loadAnnouncements() {
+  private _loadAnnouncements() {
     this.isLoading = true;
     this._announcementsService.fetchAnnouncements().subscribe(() => {
       this.isLoading = false;
     });
-    this.announcementsSub =
+    this._announcementsSub =
       this._announcementsService.announcementsChanged$.subscribe(
         (announcements) => {
           this.announcements = announcements;
