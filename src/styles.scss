@@ -17,3 +17,9 @@
   margin: auto;
   padding-block: 2rem;
 }
+
+@media (max-width: 1399.98px) {
+  .container {
+    padding-inline: 1rem;
+  }
+}

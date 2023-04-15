@@ -45,15 +45,15 @@
         [inputStyle]="{'width':'100%'}"
         [style]="{'width':'100%'}"
         [toggleMask]="true"
-        formControlName="passwordConfirmation"
         aria-describedby="password-confirmation-help"
+        formControlName="passwordConfirmation"
         placeholder="Подтвердите пароль">
       </p-password>
       <small
         *ngIf="authForm!.hasError('passwordMismatch')
         && authForm.get('passwordConfirmation')!.touched"
-        id="password-confirmation-help"
-        class="p-error pt-1 pl-2">
+        class="p-error pt-1 pl-2"
+        id="password-confirmation-help">
         Пароли не совпадают.
       </small>
     </div>
