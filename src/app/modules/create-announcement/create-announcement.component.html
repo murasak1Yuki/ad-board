@@ -1,13 +1,13 @@
 <div class="container">
   <h2 class="font-semibold text-2xl line-height-2 mb-4">Новое объявление</h2>
-  <form [formGroup]="newAnnouncementForm">
+  <form (ngSubmit)="onSubmit()" [formGroup]="newAnnouncementForm">
     <div class="sm:col-12 md:col-5 xl:col-4 p-0 mb-5">
       <label class="flex flex-row pb-3" id="category-label">
         <p>Выберите категорию</p>
         <span class="text-red-400 pl-1" pTooltip="Обязательно для заполнения.">*</span>
       </label>
       <p-treeSelect
-        [options]="categories"
+        [options]="categoriesTree"
         aria-labelledby="category-label"
         class="w-full"
         containerStyleClass="w-full"
@@ -16,17 +16,25 @@
       </p-treeSelect>
     </div>
     <div class="sm:col-12 xl:col-8 p-0 mb-5">
-      <label class="flex flex-row pb-3" for="announcement-name">
-        <p>Название объявления</p>
-        <span class="text-red-400 pl-1" pTooltip="Обязательно для заполнения.">*</span>
-      </label>
-      <input
-        class="w-full mb-5"
-        formControlName="name"
-        id="announcement-name"
-        pInputText
-        placeholder="Что хотите продать?"
-        type="text">
+      <div class="mb-5">
+        <label class="flex flex-row pb-3" for="announcement-name">
+          <p>Название объявления</p>
+          <span class="text-red-400 pl-1" pTooltip="Обязательно для заполнения.">*</span>
+        </label>
+        <input
+          class="w-full"
+          formControlName="name"
+          id="announcement-name"
+          [ngClass]="{'ng-dirty': isControlInvalidAndTouched('name', 'required')}"
+          pInputText
+          placeholder="Что хотите продать?"
+          type="text"/>
+        <small
+          *ngIf="isControlInvalidAndTouched('name', 'required')"
+          class="p-error pt-1 pl-1">
+          Введите название объявления
+        </small>
+      </div>
       <label class="flex pb-3" for="description">Описание</label>
       <textarea
         [autoResize]="true"
@@ -37,48 +45,80 @@
         placeholder="Расскажите подробнее о товаре или услуге"
         rows="7">
       </textarea>
-      <label class="flex flex-row pb-3" for="location">
+      <div class="mb-5">
+        <label class="flex flex-row pb-3" for="location">
         <p>Адрес (место проведения сделки)</p>
         <span class="text-red-400 pl-1" pTooltip="Обязательно для заполнения.">*</span>
       </label>
-      <input
-        class="w-full mb-5"
-        formControlName="location"
-        id="location"
-        pInputText
-        placeholder="Начните вводить адрес"
-        type="text">
+        <input
+          class="w-full"
+          formControlName="location"
+          id="location"
+          pInputText
+          [ngClass]="{'ng-dirty': isControlInvalidAndTouched('location', 'required')}"
+          placeholder="Начните вводить адрес"
+          type="text"/>
+        <small
+          *ngIf="isControlInvalidAndTouched('location', 'required')"
+          class="p-error pt-1 pl-1">
+          Введите значение параметра
+        </small>
+      </div>
       <p-fileUpload
-        #fileUpload
-        (onSelect)="selectFile($event)"
+        (onRemove)="onImageRemove($event)"
+        (onSelect)="onImageSelect($event)"
         [customUpload]="true"
         [fileLimit]="4"
         [multiple]="true"
         [showCancelButton]="false"
         [showUploadButton]="false"
-        accept="image/*"
+        accept=".jpg,.jpeg,.png"
         chooseIcon="pi pi-images"
         chooseLabel="Добавить картинки"
         class="file-upload">
         <ng-template pTemplate="toolbar">
-          <div class="file-upload-label">Максимум 4 картинки в формате jpeg, png</div>
+          <div class="file-upload-label">
+            Максимум 4 картинки в формате jpg, png
+          </div>
         </ng-template>
       </p-fileUpload>
+      <small
+        *ngIf="imagesError"
+        class="p-error pt-1 pl-1">
+        Загрузите хотя бы 1 фотографию
+      </small>
     </div>
     <div class="sm:col-12 md:col-6 xl:col-3 p-0 mb-4">
       <label class="flex pb-3" for="price">Цена</label>
       <p-inputNumber
-        [style]="{'width': '100%'}"
+        [style]="{ width: '100%' }"
         class="w-full mb-5"
-        mode="currency"
         currency="USD"
-        locale="en-US"
         formControlName="price"
-        id="price">
+        id="price"
+        [min]="0"
+        locale="en-US"
+        mode="currency">
       </p-inputNumber>
-      <button class="submit-announcement mb-3" pButton>Разместить объявление</button>
-      <p class="text-color-secondary text-sm line-height-3">Нажимая кнопку «Разместить объявление»
-        Вы соглашаетесь с <a href="/">правилами площадки</a>.</p>
+      <label class="flex pb-3" for="phone">Телефон</label>
+      <p-inputMask
+        formControlName="phone"
+        id="phone"
+        mask="8 999 999-99-99"
+        placeholder="8 ___ ___-__-__"
+        styleClass="mb-5">
+      </p-inputMask>
+      <button
+        [disabled]="!newAnnouncementForm.valid"
+        class="submit-announcement mb-3"
+        pButton
+        type="submit">
+        Разместить объявление
+      </button>
+      <p class="text-color-secondary text-sm line-height-3">
+        Нажимая кнопку «Разместить объявление» Вы соглашаетесь с
+        <a href="/">правилами площадки</a>.
+      </p>
     </div>
   </form>
 </div>

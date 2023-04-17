@@ -8,6 +8,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AnnouncementHeadingModule } from '@shared/components/announcement-heading/announcement-heading.component';
 import { HeaderModule } from '@shared/components/header/header.component';
+import { AngularFireModule } from '@angular/fire/compat';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [AppComponent],
@@ -16,6 +18,7 @@ import { HeaderModule } from '@shared/components/header/header.component';
     HttpClientModule,
     BrowserAnimationsModule,
     AnnouncementHeadingModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
     AppRoutingModule,
     HeaderModule,
   ],

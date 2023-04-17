@@ -19,7 +19,7 @@ export class AnnouncementItemComponent {
   @Input() announcement: Announcement | null = null;
 
   get price() {
-    return this.announcement!.price.replace(/\s/g, '');
+    return this.announcement?.price!.replace(/\s/g, '');
   }
 }
 

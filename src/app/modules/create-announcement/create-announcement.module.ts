@@ -10,6 +10,8 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ToolbarModule } from 'primeng/toolbar';
 import { InputNumberModule } from 'primeng/inputnumber';
+import {InputMaskModule} from "primeng/inputmask";
+import {NgClass, NgIf} from "@angular/common";
 
 @NgModule({
   declarations: [CreateAnnouncementComponent],
@@ -25,6 +27,9 @@ import { InputNumberModule } from 'primeng/inputnumber';
     FileUploadModule,
     ToolbarModule,
     InputNumberModule,
+    InputMaskModule,
+    NgIf,
+    NgClass,
   ],
 })
 export class CreateAnnouncementModule {}

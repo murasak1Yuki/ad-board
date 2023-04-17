@@ -6,7 +6,7 @@
     <p class="announcement-item__title">{{ announcement.name }}</p>
     <p class="announcement-item__price">{{ price | currency }}</p>
     <p class="announcement-item__location">{{ announcement.location }}</p>
-    <p class="announcement-item__time">{{ +announcement.date * 1000 | date:'MM/dd/yyyy'}}</p>
+    <p class="announcement-item__time">{{ +announcement.date | date:'MM/dd/yyyy'}}</p>
   </a>
 </ng-container>
 
