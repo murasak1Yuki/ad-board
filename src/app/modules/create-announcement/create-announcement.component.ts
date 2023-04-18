@@ -4,11 +4,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FileUpload } from 'primeng/fileupload';
 import { CategoriesService } from '@services/categories.service';
 import { Category } from '@models/category.model';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Announcement } from '@models/announcement.model';
 import { AnnouncementsService } from '@services/announcements.service';
 import { Router } from '@angular/router';
-import { getDownloadURL, getStorage, ref } from '@angular/fire/storage';
+import { ImagesService } from '@services/images.service';
 
 @Component({
   selector: 'app-create-announcement',
@@ -19,75 +18,53 @@ import { getDownloadURL, getStorage, ref } from '@angular/fire/storage';
 export class CreateAnnouncementComponent implements OnInit {
   categoriesTree!: TreeNode[];
   newAnnouncementForm!: FormGroup;
-  selectedImages: File[] = [];
   imagesError: boolean = false;
-  imageUrls: string[] = [];
-  newAnnouncement!: Announcement;
+  private _selectedImages = new Set<File>();
   private _categoriesData!: Category[];
 
   constructor(
     private _categoriesService: CategoriesService,
-    private _storage: AngularFireStorage,
+    private _imagesService: ImagesService,
     private _announcementService: AnnouncementsService,
     private _router: Router
   ) {}
 
-  onImageSelect(selectedImages: FileUpload) {
-    for (let image of selectedImages.files) {
-      let isFileAlreadyUploaded = this.selectedImages.some(
-        (uploadedImage) =>
-          uploadedImage.name === image.name &&
-          uploadedImage.type === image.type &&
-          uploadedImage.size === image.size
-      );
-      if (!isFileAlreadyUploaded) {
-        this.selectedImages.push(image);
+  onImageSelect(imageToSelect: FileUpload) {
+    for (let image of imageToSelect.files) {
+      if (!this._selectedImages.has(image)) {
+        this._selectedImages.add(image);
       }
     }
   }
 
-  onImageRemove(imageToDelete: {file: File}) {
-    let index = this.selectedImages.indexOf(imageToDelete.file);
-    if (index >= 0) {
-      this.selectedImages.splice(index, 1);
-    }
-    console.log(this.selectedImages)
+  onImageRemove(imageToDelete: { file: File }) {
+    this._selectedImages.delete(imageToDelete.file);
   }
 
-  onSubmit() {
-    if (!this.selectedImages.length) {
+  async onSubmit() {
+    if (this._selectedImages.size === 0) {
       this.imagesError = true;
       return;
     }
-    this.uploadImages().then(() => {
-      this.newAnnouncement = {
-        categoryNames: this._categoriesService.getCategoryNamesFromTreeNode(
-          this.newAnnouncementForm.get('category')?.value
-        ),
-        name: this.newAnnouncementForm.get('name')?.value,
-        phone: this.newAnnouncementForm.get('phone')?.value,
-        price: this.newAnnouncementForm.get('price')?.value.toString(),
-        date: Date.now().toString(),
-        location: this.newAnnouncementForm.get('location')?.value,
-        desc: this.newAnnouncementForm.get('description')?.value,
-        images: this.imageUrls,
-        id: Math.random().toString(36).substring(2),
-      };
-      this._announcementService.storeAnnouncement(this.newAnnouncement);
-    });
+    let imageUrls = await this._imagesService.uploadImages(
+      this._selectedImages
+    );
+    const { categoryNames, name, phone, price, location, desc } =
+      this.newAnnouncementForm.value;
+    const newAnnouncement: Announcement = {
+      categoryNames:
+        this._categoriesService.getCategoryNamesFromTreeNode(categoryNames),
+      name: name,
+      phone: phone,
+      price: price.toString(),
+      date: Date.now().toString(),
+      location: location,
+      desc: desc,
+      images: imageUrls,
+      id: Math.random().toString(36).substring(2),
+    };
+    this._announcementService.storeAnnouncement(newAnnouncement);
     this._router.navigate(['']);
-  }
-
-  async uploadImages() {
-    for (let image of this.selectedImages) {
-      const filePath = `images/${new Date().getTime()}_${image.name}`;
-      const storage = getStorage();
-      const fileRef = ref(storage, filePath);
-      await this._storage.upload(filePath, image);
-      getDownloadURL(fileRef).then((url) => {
-        this.imageUrls.push(url);
-      });
-    }
   }
 
   isControlInvalidAndTouched(
