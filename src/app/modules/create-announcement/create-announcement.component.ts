@@ -35,6 +35,9 @@ export class CreateAnnouncementComponent implements OnInit {
         this._selectedImages.add(image);
       }
     }
+    if (this._selectedImages.size != 0) {
+      this.imagesError = false;
+    }
   }
 
   onImageRemove(imageToDelete: { file: File }) {
@@ -49,9 +52,11 @@ export class CreateAnnouncementComponent implements OnInit {
     this._imagesService
       .uploadImages(this._selectedImages)
       .subscribe((imageUrls) => {
-        const { category, name, phone, price, location, description } = this.newAnnouncementForm.value;
+        const { category, name, phone, price, location, description } =
+          this.newAnnouncementForm.value;
         const newAnnouncement: Announcement = {
-          categoryNames: this._categoriesService.getCategoryNamesFromTreeNode(category),
+          categoryNames:
+            this._categoriesService.getCategoryNamesFromTreeNode(category),
           name: name,
           phone: phone,
           price: price.toString(),
@@ -66,16 +71,6 @@ export class CreateAnnouncementComponent implements OnInit {
     this._router.navigate(['']);
   }
 
-  isControlInvalidAndTouched(
-    controlName: string,
-    errorMessage: string
-  ): boolean {
-    return (
-      this.newAnnouncementForm.get(controlName)?.errors?.[errorMessage] &&
-      this.newAnnouncementForm.get(controlName)?.touched
-    );
-  }
-
   ngOnInit() {
     this._categoriesService.fetchCategories().subscribe((categories) => {
       this._categoriesData = categories;
@@ -84,12 +79,12 @@ export class CreateAnnouncementComponent implements OnInit {
       );
     });
     this.newAnnouncementForm = new FormGroup({
-      category: new FormControl(null, Validators.required),
-      name: new FormControl(null, Validators.required),
-      phone: new FormControl(null),
-      description: new FormControl(null),
-      location: new FormControl(null, Validators.required),
-      price: new FormControl(0, Validators.min(0)),
+      category: new FormControl<TreeNode | null>(null, Validators.required),
+      name: new FormControl<string | null>(null, Validators.required),
+      phone: new FormControl<string | null>(null),
+      description: new FormControl<string | null>(null),
+      location: new FormControl<string | null>(null, Validators.required),
+      price: new FormControl<number>(0, Validators.min(0)),
     });
   }
 }

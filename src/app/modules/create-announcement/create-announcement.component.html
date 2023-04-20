@@ -25,12 +25,12 @@
           class="w-full"
           formControlName="name"
           id="announcement-name"
-          [ngClass]="{'ng-dirty': isControlInvalidAndTouched('name', 'required')}"
           pInputText
           placeholder="Что хотите продать?"
           type="text"/>
         <small
-          *ngIf="isControlInvalidAndTouched('name', 'required')"
+          *ngIf="newAnnouncementForm.get('name')?.errors?.['required'] &&
+          newAnnouncementForm.get('name')?.touched"
           class="p-error pt-1 pl-1">
           Введите название объявления
         </small>
@@ -47,19 +47,19 @@
       </textarea>
       <div class="mb-5">
         <label class="flex flex-row pb-3" for="location">
-        <p>Адрес (место проведения сделки)</p>
-        <span class="text-red-400 pl-1" pTooltip="Обязательно для заполнения.">*</span>
-      </label>
+          <p>Адрес (место проведения сделки)</p>
+          <span class="text-red-400 pl-1" pTooltip="Обязательно для заполнения.">*</span>
+        </label>
         <input
           class="w-full"
           formControlName="location"
           id="location"
           pInputText
-          [ngClass]="{'ng-dirty': isControlInvalidAndTouched('location', 'required')}"
           placeholder="Начните вводить адрес"
           type="text"/>
         <small
-          *ngIf="isControlInvalidAndTouched('location', 'required')"
+          *ngIf="newAnnouncementForm.get('location')?.errors?.['required'] &&
+          newAnnouncementForm.get('location')?.touched"
           class="p-error pt-1 pl-1">
           Введите значение параметра
         </small>
@@ -82,21 +82,19 @@
           </div>
         </ng-template>
       </p-fileUpload>
-      <small
-        *ngIf="imagesError"
-        class="p-error pt-1 pl-1">
+      <small *ngIf="imagesError" class="p-error pt-1 pl-1">
         Загрузите хотя бы 1 фотографию
       </small>
     </div>
     <div class="sm:col-12 md:col-6 xl:col-3 p-0 mb-4">
       <label class="flex pb-3" for="price">Цена</label>
       <p-inputNumber
+        [min]="0"
         [style]="{ width: '100%' }"
         class="w-full mb-5"
         currency="USD"
         formControlName="price"
         id="price"
-        [min]="0"
         locale="en-US"
         mode="currency">
       </p-inputNumber>
@@ -109,7 +107,7 @@
         styleClass="mb-5">
       </p-inputMask>
       <button
-        [disabled]="!newAnnouncementForm.valid"
+        [disabled]="newAnnouncementForm.invalid"
         class="submit-announcement mb-3"
         pButton
         type="submit">
