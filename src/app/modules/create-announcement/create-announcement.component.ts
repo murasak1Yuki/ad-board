@@ -29,8 +29,8 @@ export class CreateAnnouncementComponent implements OnInit {
     private _router: Router
   ) {}
 
-  onImageSelect(imageToSelect: FileUpload) {
-    for (let image of imageToSelect.files) {
+  onImageSelect(imagesToSelect: FileUpload) {
+    for (let image of imagesToSelect.files) {
       if (!this._selectedImages.has(image)) {
         this._selectedImages.add(image);
       }
@@ -41,29 +41,28 @@ export class CreateAnnouncementComponent implements OnInit {
     this._selectedImages.delete(imageToDelete.file);
   }
 
-  async onSubmit() {
+  onSubmit() {
     if (this._selectedImages.size === 0) {
       this.imagesError = true;
       return;
     }
-    let imageUrls = await this._imagesService.uploadImages(
-      this._selectedImages
-    );
-    const { categoryNames, name, phone, price, location, desc } =
-      this.newAnnouncementForm.value;
-    const newAnnouncement: Announcement = {
-      categoryNames:
-        this._categoriesService.getCategoryNamesFromTreeNode(categoryNames),
-      name: name,
-      phone: phone,
-      price: price.toString(),
-      date: Date.now().toString(),
-      location: location,
-      desc: desc,
-      images: imageUrls,
-      id: Math.random().toString(36).substring(2),
-    };
-    this._announcementService.storeAnnouncement(newAnnouncement);
+    this._imagesService
+      .uploadImages(this._selectedImages)
+      .subscribe((imageUrls) => {
+        const { category, name, phone, price, location, description } = this.newAnnouncementForm.value;
+        const newAnnouncement: Announcement = {
+          categoryNames: this._categoriesService.getCategoryNamesFromTreeNode(category),
+          name: name,
+          phone: phone,
+          price: price.toString(),
+          date: Date.now().toString(),
+          location: location,
+          desc: description,
+          images: imageUrls,
+          id: Math.random().toString(36).substring(2),
+        };
+        this._announcementService.storeAnnouncement(newAnnouncement);
+      });
     this._router.navigate(['']);
   }
 
