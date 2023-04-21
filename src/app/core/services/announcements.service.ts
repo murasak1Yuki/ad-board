@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {map, Observable, Subject, tap} from 'rxjs';
+import { map, Observable, Subject, tap } from 'rxjs';
 
 import { Announcement } from '@models/announcement.model';
 import { environment } from '../../../environments/environment';
@@ -22,7 +22,7 @@ export class AnnouncementsService {
         environment.firebaseConfig.databaseURL + '/announcements.json'
       )
       .pipe(
-        map(announcements => {
+        map((announcements) => {
           return Object.values(announcements);
         }),
         tap((announcements) => {
@@ -42,7 +42,6 @@ export class AnnouncementsService {
 
   private _setAnnouncements(announcements: Announcement[]) {
     this._announcements = announcements;
-    console.log(announcements);
     this._announcementsChanged.next(this._announcements);
   }
 }

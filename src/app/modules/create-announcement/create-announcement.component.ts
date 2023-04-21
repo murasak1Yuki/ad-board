@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FileUpload } from 'primeng/fileupload';
@@ -19,6 +24,7 @@ export class CreateAnnouncementComponent implements OnInit {
   categoriesTree!: TreeNode[];
   newAnnouncementForm!: FormGroup;
   imagesError: boolean = false;
+  error: string | null = null;
   private _selectedImages = new Set<File>();
   private _categoriesData!: Category[];
 
@@ -26,6 +32,7 @@ export class CreateAnnouncementComponent implements OnInit {
     private _categoriesService: CategoriesService,
     private _imagesService: ImagesService,
     private _announcementService: AnnouncementsService,
+    private _cdr: ChangeDetectorRef,
     private _router: Router
   ) {}
 
@@ -49,14 +56,11 @@ export class CreateAnnouncementComponent implements OnInit {
       this.imagesError = true;
       return;
     }
-    this._imagesService
-      .uploadImages(this._selectedImages)
-      .subscribe((imageUrls) => {
-        const { category, name, phone, price, location, description } =
-          this.newAnnouncementForm.value;
+    this._imagesService.uploadImages(this._selectedImages).subscribe({
+      next: (imageUrls) => {
+        const { category, name, phone, price, location, description } = this.newAnnouncementForm.value;
         const newAnnouncement: Announcement = {
-          categoryNames:
-            this._categoriesService.getCategoryNamesFromTreeNode(category),
+          categoryNames: this._categoriesService.getCategoryNamesFromTreeNode(category),
           name: name,
           phone: phone,
           price: price.toString(),
@@ -67,8 +71,13 @@ export class CreateAnnouncementComponent implements OnInit {
           id: Math.random().toString(36).substring(2),
         };
         this._announcementService.storeAnnouncement(newAnnouncement);
-      });
-    this._router.navigate(['']);
+        this._router.navigate(['/recommended-announcements']);
+      },
+      error: (errorMessage) => {
+        this.error = errorMessage;
+        this._cdr.markForCheck();
+      },
+    });
   }
 
   ngOnInit() {
