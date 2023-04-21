@@ -9,14 +9,13 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class AnnouncementsService {
-  private _announcementsChanged = new Subject<Announcement[]>();
-  announcementsChanged$: Observable<Announcement[]> =
-    this._announcementsChanged.asObservable();
+  private _announcementsChanged: Subject<Announcement[]> = new Subject<Announcement[]>();
+  announcementsChanged$: Observable<Announcement[]> = this._announcementsChanged.asObservable();
   private _announcements: Announcement[] = [];
 
   constructor(private _http: HttpClient) {}
 
-  fetchAnnouncements() {
+  fetchAnnouncements(): Observable<Announcement[]> {
     return this._http
       .get<Announcement[]>(
         environment.firebaseConfig.databaseURL + '/announcements.json'
@@ -32,12 +31,10 @@ export class AnnouncementsService {
   }
 
   storeAnnouncement(announcement: Announcement) {
-    this._http
-      .post(
-        environment.firebaseConfig.databaseURL + '/announcements.json',
-        announcement
-      )
-      .subscribe();
+    return this._http.post(
+      environment.firebaseConfig.databaseURL + '/announcements.json',
+      announcement
+    );
   }
 
   private _setAnnouncements(announcements: Announcement[]) {

@@ -58,9 +58,11 @@ export class CreateAnnouncementComponent implements OnInit {
     }
     this._imagesService.uploadImages(this._selectedImages).subscribe({
       next: (imageUrls) => {
-        const { category, name, phone, price, location, description } = this.newAnnouncementForm.value;
+        const { category, name, phone, price, location, description } =
+          this.newAnnouncementForm.value;
         const newAnnouncement: Announcement = {
-          categoryNames: this._categoriesService.getCategoryNamesFromTreeNode(category),
+          categoryNames:
+            this._categoriesService.getCategoryNamesFromTreeNode(category),
           name: name,
           phone: phone,
           price: price.toString(),
@@ -70,8 +72,10 @@ export class CreateAnnouncementComponent implements OnInit {
           images: imageUrls,
           id: Math.random().toString(36).substring(2),
         };
-        this._announcementService.storeAnnouncement(newAnnouncement);
-        this._router.navigate(['/recommended-announcements']);
+        this._announcementService.storeAnnouncement(newAnnouncement)
+          .subscribe(() => {
+            this._router.navigateByUrl('/recommended-announcements');
+          });
       },
       error: (errorMessage) => {
         this.error = errorMessage;
