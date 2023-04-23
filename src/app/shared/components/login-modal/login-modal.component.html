@@ -1,37 +1,27 @@
 <ng-container *ngIf="isLoginMode; else registrationMode">
   <form (ngSubmit)="onSubmit()" [formGroup]="authForm">
     <div class="flex flex-column mb-4">
-      <input
-        class="mb-3"
-        formControlName="email"
-        pInputText
-        placeholder="Почта"
-        type="email">
-      <p-password
-        [feedback]="false"
-        [inputStyle]="{'width':'100%'}"
-        [style]="{'width':'100%'}"
-        [toggleMask]="true"
-        formControlName="password"
-        placeholder="Пароль">
-      </p-password>
-    </div>
-    <div class="flex justify-content-center gap-3">
-      <button [disabled]="!authForm.valid" label="Войти" pButton type="submit"></button>
-      <button (click)="switchMode()" class="p-button-text" label="Регистрация" pButton type="button"></button>
-    </div>
-  </form>
-</ng-container>
-<ng-template #registrationMode>
-  <form (ngSubmit)="onSubmit()" [formGroup]="authForm">
-    <div class="flex flex-column mb-4">
-      <input
-        class="mb-3"
-        formControlName="email"
-        pInputText
-        placeholder="Почта"
-        type="email">
-      <span class="p-input-icon-right mb-3">
+      <div class="mb-3">
+        <input
+          formControlName="email"
+          pInputText
+          class="w-full"
+          placeholder="Почта"
+          type="email">
+        <small
+          *ngIf="authForm.get('email')?.errors?.['required']
+          && authForm.get('email')?.touched"
+          class="p-error pt-1 pl-2">
+          Почта обязательна к заполнению.
+        </small>
+        <small
+          *ngIf="authForm.get('email')?.errors?.['email']
+          && authForm.get('email')?.touched"
+          class="p-error pt-1 pl-2">
+          Некорректная почта.
+        </small>
+      </div>
+      <span class="p-input-icon-right">
         <i (click)="onShowPassword()" *ngIf="!showPassword" class="pi pi-eye"></i>
         <i (click)="onShowPassword()" *ngIf="showPassword" class="pi pi-eye-slash"></i>
         <input
@@ -41,8 +31,74 @@
           pInputText
           placeholder="Пароль">
       </span>
+      <small
+        *ngIf="authForm.get('password')?.errors?.['required']
+          && authForm.get('password')!.touched"
+        class="p-error pt-1 pl-2">
+        Пароль обязателен к заполнению.
+      </small>
+      <small
+        *ngIf="authForm.get('password')?.errors?.['minlength']
+          && authForm.get('password')!.touched"
+        class="p-error pt-1 pl-2">
+        Пароль должен содержать минимум 6 символов.
+      </small>
+    </div>
+    <div class="flex justify-content-center gap-3">
+      <button [disabled]="!authForm.valid" label="Войти" pButton type="submit"></button>
+      <button (click)="switchMode()" class="p-button-text" label="Регистрация" pButton type="button"></button>
+    </div>
+  </form>
+</ng-container>
+
+<ng-template #registrationMode>
+  <form (ngSubmit)="onSubmit()" [formGroup]="authForm">
+    <div class="flex flex-column mb-4">
+      <div class="mb-3">
+        <input
+          formControlName="email"
+          pInputText
+          class="w-full"
+          placeholder="Почта"
+          type="email">
+        <small
+          *ngIf="authForm.get('email')?.errors?.['required']
+          && authForm.get('email')?.touched"
+          class="p-error pt-1 pl-2">
+          Почта обязательна к заполнению.
+        </small>
+        <small
+          *ngIf="authForm.get('email')?.errors?.['email']
+          && authForm.get('email')?.touched"
+          class="p-error pt-1 pl-2">
+          Некорректная почта.
+        </small>
+      </div>
+      <span class="p-input-icon-right">
+        <i (click)="onShowPassword()" *ngIf="!showPassword" class="pi pi-eye"></i>
+        <i (click)="onShowPassword()" *ngIf="showPassword" class="pi pi-eye-slash"></i>
+        <input
+          [type]="signUpPasswordInputType"
+          class="w-full"
+          formControlName="password"
+          pInputText
+          placeholder="Пароль">
+      </span>
+      <small
+        *ngIf="authForm.get('password')?.errors?.['required']
+          && authForm.get('password')!.touched"
+        class="p-error pt-1 pl-2">
+        Пароль обязателен к заполнению.
+      </small>
+      <small
+        *ngIf="authForm.get('password')?.errors?.['minlength']
+          && authForm.get('password')!.touched"
+        class="p-error pt-1 pl-2">
+        Пароль должен содержать минимум 6 символов.
+      </small>
       <input
         [type]="signUpPasswordInputType"
+        class="mt-3"
         formControlName="passwordConfirmation"
         pInputText
         placeholder="Подтвердите пароль">
@@ -70,4 +126,3 @@
     </div>
   </form>
 </ng-template>
-

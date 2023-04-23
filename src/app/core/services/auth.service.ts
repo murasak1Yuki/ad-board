@@ -116,20 +116,20 @@ export class AuthService {
   }
 
   private handleError(errorRes: HttpErrorResponse) {
-    let errorMessage = 'An unknown error occurred!';
+    let errorMessage = 'Произошла неизвестная ошибка.';
     if (!errorRes.error || !errorRes.error.error) {
       return throwError(() => errorMessage);
     }
     switch (errorRes.error.error.message) {
       case 'EMAIL_EXISTS':
         errorMessage =
-          'Данный адрес электронной почты уже существует, пожалуйста, выберите уникальный адрес.';
+          'Данный адрес электронной почты уже существует.';
         break;
       case 'EMAIL_NOT_FOUND':
-        errorMessage = 'This email does not exist.';
+        errorMessage = 'Этой электронной почты не существует.';
         break;
       case 'INVALID_PASSWORD':
-        errorMessage = 'This password is not correct.';
+        errorMessage = 'Этот пароль неверен.';
         break;
     }
     return throwError(() => errorMessage);

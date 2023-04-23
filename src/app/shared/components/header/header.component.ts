@@ -2,7 +2,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  NgModule, OnDestroy,
+  NgModule,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { MenuItem } from 'primeng/api';
@@ -15,7 +16,7 @@ import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { AuthService } from '@services/auth.service';
 import { AuthResponseData } from '@models/auth-response-data.model';
 import { Subscription } from 'rxjs';
-import {User} from "@models/user.model";
+import { User } from '@models/user.model';
 
 @Component({
   selector: 'app-header',

@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   NgModule,
   OnInit,
@@ -16,7 +17,6 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { NgIf } from '@angular/common';
-import { PasswordModule } from 'primeng/password';
 import { Observable } from 'rxjs';
 import { AuthService } from '@services/auth.service';
 import { AuthResponseData } from '@models/auth-response-data.model';
@@ -38,22 +38,22 @@ export class LoginModalComponent implements OnInit {
   constructor(
     private _config: DynamicDialogConfig,
     private _authService: AuthService,
-    private _dialogRef: DynamicDialogRef
+    private _dialogRef: DynamicDialogRef,
+    private _cdr: ChangeDetectorRef
   ) {
     _config.header = 'Авторизация';
   }
 
   onShowPassword() {
-    this.signUpPasswordInputType =
-      this.signUpPasswordInputType === 'password' ? 'text' : 'password';
+    this.signUpPasswordInputType = this.signUpPasswordInputType === 'password'
+      ? 'text'
+      : 'password';
     this.showPassword = !this.showPassword;
   }
 
   ngOnInit() {
     this._initForm();
-    this.authForm.valueChanges.subscribe(() => {
-      if (this.error) this.error = null;
-    });
+    this._handleError();
   }
 
   onSubmit() {
@@ -81,6 +81,7 @@ export class LoginModalComponent implements OnInit {
       error: (errorMessage) => {
         this.error = errorMessage;
         this.isLoading = false;
+        this._cdr.markForCheck();
       },
     });
   }
@@ -89,6 +90,18 @@ export class LoginModalComponent implements OnInit {
     this.isLoginMode = !this.isLoginMode;
     this._config.header = this.isLoginMode ? 'Авторизация' : 'Регистрация';
     this._initForm();
+    this._handleError();
+    this.showPassword = false;
+    this.signUpPasswordInputType = 'password';
+  }
+
+  private _handleError() {
+    this.authForm.valueChanges.subscribe((_) => {
+      if (this.error) {
+        this.error = null;
+        this._cdr.markForCheck();
+      }
+    });
   }
 
   private _initForm() {
@@ -143,13 +156,7 @@ export class LoginModalComponent implements OnInit {
 
 @NgModule({
   declarations: [LoginModalComponent],
-  imports: [
-    ReactiveFormsModule,
-    InputTextModule,
-    ButtonModule,
-    NgIf,
-    PasswordModule,
-  ],
+  imports: [ReactiveFormsModule, InputTextModule, ButtonModule, NgIf],
   exports: [LoginModalComponent],
 })
 export class LoginModalModule {}
