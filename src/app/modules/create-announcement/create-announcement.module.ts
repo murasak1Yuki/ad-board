@@ -10,14 +10,19 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ToolbarModule } from 'primeng/toolbar';
 import { InputNumberModule } from 'primeng/inputnumber';
-import {InputMaskModule} from "primeng/inputmask";
-import {NgClass, NgIf} from "@angular/common";
+import { InputMaskModule } from 'primeng/inputmask';
+import { NgClass, NgIf } from '@angular/common';
+import { AuthGuard } from '../../core/guards/auth.guard';
 
 @NgModule({
   declarations: [CreateAnnouncementComponent],
   imports: [
     RouterModule.forChild([
-      { path: '', component: CreateAnnouncementComponent },
+      {
+        path: '',
+        component: CreateAnnouncementComponent,
+        canActivate: [AuthGuard],
+      },
     ]),
     ReactiveFormsModule,
     TooltipModule,

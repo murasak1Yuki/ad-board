@@ -17,6 +17,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { NgIf } from '@angular/common';
 import { PasswordModule } from 'primeng/password';
+import { Observable } from 'rxjs';
+import { AuthService } from '@services/auth.service';
+import { AuthResponseData } from '@models/auth-response-data.model';
 
 @Component({
   selector: 'app-login-modal',
@@ -26,31 +29,70 @@ import { PasswordModule } from 'primeng/password';
 })
 export class LoginModalComponent implements OnInit {
   authForm!: FormGroup;
-  loginMode: boolean = true;
+  isLoginMode: boolean = true;
+  isLoading: boolean = false;
+  signUpPasswordInputType: string = 'password';
+  showPassword: boolean = false;
+  error: string | null = null;
 
   constructor(
     private _config: DynamicDialogConfig,
+    private _authService: AuthService,
     private _dialogRef: DynamicDialogRef
   ) {
     _config.header = 'Авторизация';
   }
 
+  onShowPassword() {
+    this.signUpPasswordInputType =
+      this.signUpPasswordInputType === 'password' ? 'text' : 'password';
+    this.showPassword = !this.showPassword;
+  }
+
   ngOnInit() {
     this._initForm();
+    this.authForm.valueChanges.subscribe(() => {
+      if (this.error) this.error = null;
+    });
   }
 
   onSubmit() {
-    this._dialogRef.close(true);
+    if (this.authForm.invalid) {
+      return;
+    }
+    const email = this.authForm.value.email;
+    const password = this.authForm.value.password;
+
+    let authObs$: Observable<AuthResponseData>;
+
+    this.isLoading = true;
+
+    if (this.isLoginMode) {
+      authObs$ = this._authService.login(email, password);
+    } else {
+      authObs$ = this._authService.signup(email, password);
+    }
+
+    authObs$.subscribe({
+      next: (responseData: AuthResponseData) => {
+        this.isLoading = false;
+        this._dialogRef.close(responseData);
+      },
+      error: (errorMessage) => {
+        this.error = errorMessage;
+        this.isLoading = false;
+      },
+    });
   }
 
   switchMode() {
-    this.loginMode = !this.loginMode;
-    this._config.header = this.loginMode ? 'Авторизация' : 'Регистрация';
+    this.isLoginMode = !this.isLoginMode;
+    this._config.header = this.isLoginMode ? 'Авторизация' : 'Регистрация';
     this._initForm();
   }
 
   private _initForm() {
-    if (this.loginMode) {
+    if (this.isLoginMode) {
       this.authForm = new FormGroup({
         email: new FormControl(null, [Validators.required, Validators.email]),
         password: new FormControl(null, [
@@ -80,15 +122,22 @@ export class LoginModalComponent implements OnInit {
   ): ValidationErrors | null {
     const { password, passwordConfirmation } = form.value;
     const passwordConfirmationControl = form.get('passwordConfirmation');
+    let passwordConfirmationControlErrors = passwordConfirmationControl!.errors;
 
-    const errors =
-      password === passwordConfirmation || (!password && !passwordConfirmation)
-        ? null
-        : { passwordMismatch: true };
+    password === passwordConfirmation || (!password && !passwordConfirmation)
+      ? delete passwordConfirmationControlErrors?.['passwordMismatch']
+      : (passwordConfirmationControlErrors = {
+          ...passwordConfirmationControlErrors,
+          passwordMismatch: true,
+        });
 
-    passwordConfirmationControl?.setErrors(errors);
+    passwordConfirmationControl?.setErrors(
+      Object.keys(passwordConfirmationControlErrors ?? {}).length
+        ? passwordConfirmationControlErrors
+        : null
+    );
 
-    return errors;
+    return null;
   }
 }
 

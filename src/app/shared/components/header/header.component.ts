@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  NgModule,
+  NgModule, OnDestroy,
   OnInit,
 } from '@angular/core';
 import { MenuItem } from 'primeng/api';
@@ -12,6 +12,10 @@ import { MenuModule } from 'primeng/menu';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { LoginModalComponent } from '../login-modal/login-modal.component';
+import { AuthService } from '@services/auth.service';
+import { AuthResponseData } from '@models/auth-response-data.model';
+import { Subscription } from 'rxjs';
+import {User} from "@models/user.model";
 
 @Component({
   selector: 'app-header',
@@ -19,14 +23,17 @@ import { LoginModalComponent } from '../login-modal/login-modal.component';
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   menuItems!: MenuItem[];
   isAuthenticated: boolean = false;
+  user!: User | null;
   private _ref!: DynamicDialogRef;
+  private _userSub!: Subscription;
 
   constructor(
     private _dialogService: DialogService,
-    private _cdr: ChangeDetectorRef
+    private _cdr: ChangeDetectorRef,
+    private _authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -39,9 +46,17 @@ export class HeaderComponent implements OnInit {
       },
       {
         label: 'Выйти',
-        command: () => (this.isAuthenticated = false),
+        command: () => this._authService.logout(),
       },
     ];
+    this._userSub = this._authService.user.subscribe((user) => {
+      this.isAuthenticated = !!user;
+      this.user = user;
+    });
+  }
+
+  ngOnDestroy() {
+    this._userSub.unsubscribe();
   }
 
   showAuthDialog() {
@@ -53,8 +68,8 @@ export class HeaderComponent implements OnInit {
       },
     });
 
-    this._ref.onClose.subscribe((isAuthenticated: boolean) => {
-      this.isAuthenticated = isAuthenticated;
+    this._ref.onClose.subscribe((authResponseData: AuthResponseData) => {
+      this.isAuthenticated = !!authResponseData;
       this._cdr.markForCheck();
     });
   }

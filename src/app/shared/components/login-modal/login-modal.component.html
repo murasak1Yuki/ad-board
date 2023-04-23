@@ -1,4 +1,4 @@
-<ng-container *ngIf="loginMode; else registrationMode">
+<ng-container *ngIf="isLoginMode; else registrationMode">
   <form (ngSubmit)="onSubmit()" [formGroup]="authForm">
     <div class="flex flex-column mb-4">
       <input
@@ -31,30 +31,37 @@
         pInputText
         placeholder="Почта"
         type="email">
-      <p-password
-        [feedback]="false"
-        [inputStyle]="{'width':'100%'}"
-        [style]="{'width':'100%'}"
-        [toggleMask]="true"
-        class="mb-3"
-        formControlName="password"
-        placeholder="Пароль">
-      </p-password>
-      <p-password
-        [feedback]="false"
-        [inputStyle]="{'width':'100%'}"
-        [style]="{'width':'100%'}"
-        [toggleMask]="true"
-        aria-describedby="password-confirmation-help"
+      <span class="p-input-icon-right mb-3">
+        <i (click)="onShowPassword()" *ngIf="!showPassword" class="pi pi-eye"></i>
+        <i (click)="onShowPassword()" *ngIf="showPassword" class="pi pi-eye-slash"></i>
+        <input
+          [type]="signUpPasswordInputType"
+          class="w-full"
+          formControlName="password"
+          pInputText
+          placeholder="Пароль">
+      </span>
+      <input
+        [type]="signUpPasswordInputType"
         formControlName="passwordConfirmation"
+        pInputText
         placeholder="Подтвердите пароль">
-      </p-password>
       <small
-        *ngIf="authForm!.hasError('passwordMismatch')
+        *ngIf="authForm.get('passwordConfirmation')?.errors?.['passwordMismatch']
         && authForm.get('passwordConfirmation')!.touched"
-        class="p-error pt-1 pl-2"
-        id="password-confirmation-help">
+        class="p-error pt-1 pl-2">
         Пароли не совпадают.
+      </small>
+      <small
+        *ngIf="authForm.get('passwordConfirmation')?.errors?.['required']
+        && authForm.get('passwordConfirmation')!.touched"
+        class="p-error pt-1 pl-2">
+        Подтверждение пароля обязательно к заполнению.
+      </small>
+      <small
+        *ngIf="error"
+        class="p-error pt-1 pl-2">
+        {{ error }}
       </small>
     </div>
     <div class="flex flex-wrap justify-content-center gap-3">

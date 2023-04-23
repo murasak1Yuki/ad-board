@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -10,6 +10,7 @@ import { AnnouncementHeadingModule } from '@shared/components/announcement-headi
 import { HeaderModule } from '@shared/components/header/header.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../environments/environment';
+import { AuthInterceptorService } from '@services/auth-interceptor.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,7 +23,14 @@ import { environment } from '../environments/environment';
     AppRoutingModule,
     HeaderModule,
   ],
-  providers: [DialogService],
+  providers: [
+    DialogService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
