@@ -4,18 +4,19 @@ import { BehaviorSubject, catchError, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { User } from '@models/user.model';
 import { AuthResponseData } from '@models/auth-response-data.model';
+import { RefreshTokenResponseData } from '@models/refresh-token-response-data.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   user = new BehaviorSubject<User | null>(null);
-  private tokenExpirationTime: any;
+  private tokenExpirationTime!: ReturnType<typeof setTimeout> | null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private _http: HttpClient) {}
 
   signup(email: string, password: string) {
-    return this.http
+    return this._http
       .post<AuthResponseData>(
         'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
           environment.firebaseConfig.apiKey,
@@ -31,6 +32,7 @@ export class AuthService {
           this.handleAuthentication(
             resData.email,
             resData.localId,
+            resData.refreshToken,
             resData.idToken,
             +resData.expiresIn
           );
@@ -39,7 +41,7 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
-    return this.http
+    return this._http
       .post<AuthResponseData>(
         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
           environment.firebaseConfig.apiKey,
@@ -56,6 +58,7 @@ export class AuthService {
             resData.email,
             resData.localId,
             resData.idToken,
+            resData.refreshToken,
             +resData.expiresIn
           );
         })
@@ -75,6 +78,7 @@ export class AuthService {
     const userData: {
       email: string;
       id: string;
+      refreshToken: string;
       _token: string;
       _tokenExpirationDate: string;
     } = JSON.parse(localStorage.getItem('userData')!);
@@ -84,6 +88,7 @@ export class AuthService {
     const loadedUser = new User(
       userData.email,
       userData.id,
+      userData.refreshToken,
       userData._token,
       new Date(userData._tokenExpirationDate)
     );
@@ -92,26 +97,51 @@ export class AuthService {
       const expirationDuration =
         new Date(userData._tokenExpirationDate).getTime() -
         new Date().getTime();
-      this._autoLogout(expirationDuration);
+      this._autoRefreshIdToken(expirationDuration, loadedUser);
     }
   }
 
-  private _autoLogout(expirationDuration: number) {
+  private _refreshIdToken(refreshToken: string) {
+    return this._http.post<RefreshTokenResponseData>(
+      'https://securetoken.googleapis.com/v1/token?key=' +
+        environment.firebaseConfig.apiKey,
+      {
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
+      }
+    );
+  }
+
+  private _autoRefreshIdToken(expirationDuration: number, user: User) {
+    const refreshTimeMs = expirationDuration - 5 * 60 * 1000;
     this.tokenExpirationTime = setTimeout(() => {
-      this.logout();
-    }, expirationDuration);
+      this._refreshIdToken(user.refreshToken).subscribe({
+        next: (resData) => {
+          const refreshedUser = new User(
+            user.email,
+            user.id,
+            resData.refresh_token,
+            resData.id_token,
+            new Date(new Date().getTime() + +resData.expires_in * 1000)
+          );
+          this.user.next(refreshedUser);
+          localStorage.setItem('userData', JSON.stringify(refreshedUser));
+        },
+      });
+    }, refreshTimeMs);
   }
 
   private handleAuthentication(
     email: string,
     userId: string,
     token: string,
+    refreshToken: string,
     expiresIn: number
   ) {
     const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
-    const user = new User(email, userId, token, expirationDate);
+    const user = new User(email, userId, refreshToken, token, expirationDate);
     this.user.next(user);
-    this._autoLogout(expiresIn * 1000);
+    this._autoRefreshIdToken(expiresIn * 1000, user);
     localStorage.setItem('userData', JSON.stringify(user));
   }
 
@@ -122,8 +152,7 @@ export class AuthService {
     }
     switch (errorRes.error.error.message) {
       case 'EMAIL_EXISTS':
-        errorMessage =
-          'Данный адрес электронной почты уже существует.';
+        errorMessage = 'Данный адрес электронной почты уже существует.';
         break;
       case 'EMAIL_NOT_FOUND':
         errorMessage = 'Этой электронной почты не существует.';

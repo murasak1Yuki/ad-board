@@ -43,6 +43,11 @@
         class="p-error pt-1 pl-2">
         Пароль должен содержать минимум 6 символов.
       </small>
+      <small
+        *ngIf="error"
+        class="p-error pt-1 pl-2">
+        {{ error }}
+      </small>
     </div>
     <div class="flex justify-content-center gap-3">
       <button [disabled]="!authForm.valid" label="Войти" pButton type="submit"></button>
