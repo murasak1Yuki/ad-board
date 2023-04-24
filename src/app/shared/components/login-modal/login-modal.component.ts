@@ -93,6 +93,7 @@ export class LoginModalComponent implements OnInit {
     this._handleError();
     this.showPassword = false;
     this.signUpPasswordInputType = 'password';
+    this.error = null;
   }
 
   private _handleError() {
