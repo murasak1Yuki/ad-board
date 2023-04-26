@@ -10,6 +10,7 @@ import {
 import { AnnouncementViewComponent } from './pages/announcement-view/announcement-view.component';
 import { GalleryModule } from "@shared/components/gallery/gallery.component";
 import { BreadcrumbModule } from "primeng/breadcrumb";
+import { SkeletonModule } from "primeng/skeleton";
 
 @NgModule({
   declarations: [RecommendedAnnouncementsComponent, AnnouncementViewComponent],
@@ -20,6 +21,7 @@ import { BreadcrumbModule } from "primeng/breadcrumb";
     AnnouncementItemModule,
     GalleryModule,
     BreadcrumbModule,
+    SkeletonModule,
   ],
 })
 export class AnnouncementsModule {}

@@ -1,10 +1,41 @@
 <div class="container">
-  <p-breadcrumb
-    [model]="categoryItems"
-    class="breadcrumb"
-    styleClass="border-none p-2">
-  </p-breadcrumb>
-  <app-gallery
-    [announcementImages]="announcement!.images"
-    [announcementName]="announcement!.name"></app-gallery>
+  <ng-container *ngIf="!isLoading">
+    <p-breadcrumb
+      [model]="categoryItems"
+      class="breadcrumb"
+      styleClass="border-none px-0 py-2">
+    </p-breadcrumb>
+    <div class="lg:flex xl:flex">
+      <div class="sm:col-12 md:col-12 lg:col-8 xl:col-8 p-0">
+        <app-gallery
+          [announcementImages]="announcement!.images"
+          [announcementName]="announcement!.name"></app-gallery>
+      </div>
+      <div class="sm:col-12 md:col-12 lg:col-4 xl:col-4">
+
+      </div>
+    </div>
+  </ng-container>
+
+
+  <ng-container *ngIf="isLoading">
+    <div class="flex py-4">
+      <div *ngFor="let _ of skeletonArr" class="sm:w-4 md:w-3 lg:w-2 xl:w-2 w-4">
+        <p-skeleton height="16px" width="90%"></p-skeleton>
+      </div>
+    </div>
+    <div class="sm:col-12 md:col-12 lg:col-8 xl:col-8 p-0">
+      <div class="border-round-sm mb-2">
+        <p-skeleton height="450px" width="100%"></p-skeleton>
+      </div>
+      <ul class="flex justify-content-start gap-2 w-full">
+        <li *ngFor="let _ of skeletonArr"
+            class="w-3 p-0">
+          <p-skeleton height="100px" width="100%"></p-skeleton>
+        </li>
+      </ul>
+    </div>
+  </ng-container>
 </div>
+
+

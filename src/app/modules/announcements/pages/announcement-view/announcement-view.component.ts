@@ -12,6 +12,8 @@ import { MenuItem } from 'primeng/api';
 export class AnnouncementViewComponent implements OnInit {
   public announcement!: Announcement | null;
   public categoryItems!: MenuItem[];
+  public isLoading: boolean = false;
+  public skeletonArr = new Array(3);
   private _id!: string;
 
   constructor(
@@ -20,6 +22,11 @@ export class AnnouncementViewComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this._announcementInit();
+  }
+
+  private _announcementInit() {
+    this.isLoading = true;
     this._route.params.subscribe((params: Params) => {
       this._id = params['id'];
       const announcements = this._announcementsService.getAnnouncements();
@@ -28,12 +35,14 @@ export class AnnouncementViewComponent implements OnInit {
           this._id
         );
         this._createMenuItemsFromCategories();
+        this.isLoading = false;
       } else {
         this._announcementsService
           .fetchAnnouncementById(this._id)
           .subscribe((announcement) => {
             this.announcement = { ...announcement, id: this._id };
             this._createMenuItemsFromCategories();
+            this.isLoading = false;
           });
       }
     });

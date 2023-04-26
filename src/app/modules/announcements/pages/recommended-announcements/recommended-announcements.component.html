@@ -4,8 +4,8 @@
     <div class="announcements-grid">
       <app-announcement-item
         *ngFor="let announcement of announcements"
-        [announcement]="announcement"
-      ></app-announcement-item>
+        [announcement]="announcement">
+      </app-announcement-item>
     </div>
   </ng-container>
 
@@ -15,7 +15,6 @@
 
   <div class="announcements-grid">
     <ng-container *ngIf="isLoading">
-      <!--    <p-progressSpinner class="flex justify-content-center align-content-center"></p-progressSpinner>-->
       <ng-container *ngFor="let _ of skeletonArr">
         <app-announcement-item></app-announcement-item>
       </ng-container>

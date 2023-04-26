@@ -1,23 +1,22 @@
-<div class="sm:col-12 md:col-12 lg:col-8 xl:col-8">
-  <div class="img-wrapper border-round-sm overflow-hidden mb-2">
-    <img
+<div class="img-wrapper border-round-sm overflow-hidden mb-2">
+  <img
     [alt]="announcementName"
     [src]="announcementImages[currentIndex]"
     class="bg-image"/>
-    <img
-      [alt]="announcementName"
-      [src]="announcementImages[currentIndex]"
-      class="main-image"/>
-  </div>
-  <ul class="flex flex-row justify-content-between gap-2 w-full">
-    <li *ngFor="let image of announcementImages; let i = index"
-         class="w-3 p-0">
-      <img
-        (click)="currentIndex = i"
-        [alt]="announcementName"
-        [class.selected]="currentIndex === i"
-        [src]="image"
-        class="thumbnail-image"/>
-    </li>
-  </ul>
+  <img
+    [alt]="announcementName"
+    [src]="announcementImages[currentIndex]"
+    class="main-image"/>
 </div>
+<ul class="flex flex-row justify-content-between gap-2 w-full">
+  <li *ngFor="let image of announcementImages; let i = index"
+      class="w-3 p-0">
+    <img
+      (click)="currentIndex = i"
+      [alt]="announcementName"
+      [class.selected]="currentIndex === i"
+      [src]="image"
+      class="thumbnail-image"/>
+  </li>
+</ul>
+
