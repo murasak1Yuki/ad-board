@@ -1,0 +1,12 @@
+.breadcrumb ::ng-deep {
+
+  .p-breadcrumb .p-breadcrumb-chevron {
+    padding-bottom: 1.4rem;
+  }
+
+  .p-breadcrumb .p-breadcrumb-chevron:before {
+    content: '\002E';
+    font-weight: bold;
+    font-size: 2rem;
+  }
+}

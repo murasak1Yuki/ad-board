@@ -82,7 +82,7 @@
           </div>
         </ng-template>
       </p-fileUpload>
-      <small *ngIf="imagesError" class="p-error pt-1 pl-1">
+      <small *ngIf="isImagesError" class="p-error pt-1 pl-1">
         Загрузите хотя бы 1 фотографию
       </small>
     </div>
@@ -104,13 +104,13 @@
         id="phone"
         mask="8 999 999-99-99"
         placeholder="8 ___ ___-__-__"
-        styleClass="mb-5">
+        styleClass="w-full mb-5">
       </p-inputMask>
       <div *ngIf="error" class="p-error mb-5">
         {{ error }}
       </div>
       <button
-        [disabled]="newAnnouncementForm.invalid"
+        [disabled]="newAnnouncementForm.invalid || selectedImages.size > 4"
         class="submit-announcement mb-3"
         pButton
         type="submit">

@@ -11,7 +11,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { ToolbarModule } from 'primeng/toolbar';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputMaskModule } from 'primeng/inputmask';
-import { NgClass, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { AuthGuard } from '../../core/guards/auth.guard';
 
 @NgModule({
@@ -34,7 +34,6 @@ import { AuthGuard } from '../../core/guards/auth.guard';
     InputNumberModule,
     InputMaskModule,
     NgIf,
-    NgClass,
   ],
 })
 export class CreateAnnouncementModule {}

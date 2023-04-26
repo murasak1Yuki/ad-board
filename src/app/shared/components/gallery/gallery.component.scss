@@ -1,0 +1,39 @@
+.img-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+}
+
+.main-image {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  width: auto;
+  transform: translateX(-50%);
+  object-fit: contain;
+}
+
+.bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  object-fit: cover;
+  filter: blur(24px);
+}
+
+.thumbnail-image {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.selected {
+  border: 5px solid #3B82F6;
+  border-radius: 4px;
+  padding: 2px;
+  opacity: 1;
+}

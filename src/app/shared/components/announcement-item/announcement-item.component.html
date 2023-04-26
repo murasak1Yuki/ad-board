@@ -1,5 +1,5 @@
 <ng-container *ngIf="announcement; else skeleton">
-  <a class="announcement-item" href="#">
+  <a routerLink="/view/{{announcement.id}}" class="announcement-item">
     <div class="announcement-item__img">
       <img [src]="announcement.images[0]" alt="{{ announcement.name }}"/>
     </div>

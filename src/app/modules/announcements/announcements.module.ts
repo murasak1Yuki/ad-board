@@ -7,14 +7,19 @@ import { AnnouncementItemModule } from '@shared/components/announcement-item/ann
 import {
   RecommendedAnnouncementsComponent
 } from '@announcements-pages/recommended-announcements/recommended-announcements.component';
+import { AnnouncementViewComponent } from './pages/announcement-view/announcement-view.component';
+import { GalleryModule } from "@shared/components/gallery/gallery.component";
+import { BreadcrumbModule } from "primeng/breadcrumb";
 
 @NgModule({
-  declarations: [RecommendedAnnouncementsComponent],
+  declarations: [RecommendedAnnouncementsComponent, AnnouncementViewComponent],
   imports: [
     AnnouncementsRoutingModule,
     ProgressSpinnerModule,
     CommonModule,
     AnnouncementItemModule,
+    GalleryModule,
+    BreadcrumbModule,
   ],
 })
 export class AnnouncementsModule {}

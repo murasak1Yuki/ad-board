@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment';
 })
 export class AnnouncementsService {
   private _announcementsChanged: Subject<Announcement[]> = new Subject<Announcement[]>();
-  announcementsChanged$: Observable<Announcement[]> = this._announcementsChanged.asObservable();
+  public announcementsChanged$: Observable<Announcement[]> = this._announcementsChanged.asObservable();
   private _announcements: Announcement[] = [];
 
   constructor(private _http: HttpClient) {}
@@ -22,6 +22,9 @@ export class AnnouncementsService {
       )
       .pipe(
         map((announcements) => {
+          for (let key in announcements) {
+            announcements[key].id = key;
+          }
           return Object.values(announcements);
         }),
         tap((announcements) => {
@@ -30,11 +33,26 @@ export class AnnouncementsService {
       );
   }
 
+  fetchAnnouncementById(id: string): Observable<Announcement> {
+    return this._http.get<Announcement>(
+      `${environment.firebaseConfig.databaseURL}/announcements/${id}.json`
+    );
+  }
+
   storeAnnouncement(announcement: Announcement) {
     return this._http.post(
       environment.firebaseConfig.databaseURL + '/announcements.json',
       announcement
     );
+  }
+
+  getAnnouncements() {
+    return this._announcements;
+  }
+
+  getAnnouncementById(id: string) {
+    const announcement = this._announcements.find((a) => a.id === id)!;
+    return announcement ? announcement : null;
   }
 
   private _setAnnouncements(announcements: Announcement[]) {

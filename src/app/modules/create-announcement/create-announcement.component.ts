@@ -21,11 +21,11 @@ import { ImagesService } from '@services/images.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateAnnouncementComponent implements OnInit {
-  categoriesTree!: TreeNode[];
-  newAnnouncementForm!: FormGroup;
-  imagesError: boolean = false;
-  error: string | null = null;
-  private _selectedImages = new Set<File>();
+  public categoriesTree!: TreeNode[];
+  public newAnnouncementForm!: FormGroup;
+  public isImagesError: boolean = false;
+  public error: string | null = null;
+  public selectedImages = new Set<File>();
   private _categoriesData!: Category[];
 
   constructor(
@@ -38,25 +38,25 @@ export class CreateAnnouncementComponent implements OnInit {
 
   onImageSelect(imagesToSelect: FileUpload) {
     for (let image of imagesToSelect.files) {
-      if (!this._selectedImages.has(image)) {
-        this._selectedImages.add(image);
+      if (!this.selectedImages.has(image)) {
+        this.selectedImages.add(image);
       }
     }
-    if (this._selectedImages.size != 0) {
-      this.imagesError = false;
+    if (this.selectedImages.size != 0) {
+      this.isImagesError = false;
     }
   }
 
   onImageRemove(imageToDelete: { file: File }) {
-    this._selectedImages.delete(imageToDelete.file);
+    this.selectedImages.delete(imageToDelete.file);
   }
 
   onSubmit() {
-    if (this._selectedImages.size === 0) {
-      this.imagesError = true;
+    if (this.selectedImages.size === 0) {
+      this.isImagesError = true;
       return;
     }
-    this._imagesService.uploadImages(this._selectedImages).subscribe({
+    this._imagesService.uploadImages(this.selectedImages).subscribe({
       next: (imageUrls) => {
         const { category, name, phone, price, location, description } =
           this.newAnnouncementForm.value;
@@ -74,7 +74,7 @@ export class CreateAnnouncementComponent implements OnInit {
         };
         this._announcementService.storeAnnouncement(newAnnouncement)
           .subscribe(() => {
-            this._router.navigateByUrl('/recommended-announcements');
+            this._router.navigateByUrl('');
           });
       },
       error: (errorMessage) => {
