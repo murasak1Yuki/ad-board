@@ -6,13 +6,18 @@
       styleClass="border-none px-0 py-2">
     </p-breadcrumb>
     <div class="lg:flex xl:flex">
-      <div class="sm:col-12 md:col-12 lg:col-8 xl:col-8 p-0">
+      <div class="sm:col-12 md:col-12 lg:col-8 xl:col-8 py-0 pl-0 lg:pr-4 xl:pr-4">
+        <h2 class="font-semibold text-3xl line-height-2 mb-3">{{ announcement?.name }}</h2>
         <app-gallery
           [announcementImages]="announcement!.images"
           [announcementName]="announcement!.name"></app-gallery>
       </div>
-      <div class="sm:col-12 md:col-12 lg:col-4 xl:col-4">
-
+      <div class="sm:col-12 md:col-12 lg:col-4 xl:col-4 p-0 md:mt-3 sm:mt-3 lg:mt-0 xl:mt-0 mt-3">
+        <h2 class="font-semibold text-3xl line-height-2 mb-3">{{ announcement?.price | currency }}</h2>
+        <button (click)="showPhoneDialog()" class="justify-content-center text-xl h-4rem w-full" pButton>
+          <i class="pi pi-phone text-xl pr-3"></i>
+          <span>Показать номер телефона</span>
+        </button>
       </div>
     </div>
   </ng-container>

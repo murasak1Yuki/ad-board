@@ -1,10 +1,16 @@
-import { Component, Input, NgModule } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  NgModule,
+} from '@angular/core';
 import { NgForOf } from '@angular/common';
 
 @Component({
   selector: 'app-gallery',
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GalleryComponent {
   @Input() announcementImages!: string[];

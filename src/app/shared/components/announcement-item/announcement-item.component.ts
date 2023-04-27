@@ -18,10 +18,6 @@ import { RouterLink } from '@angular/router';
 })
 export class AnnouncementItemComponent {
   @Input() announcement: Announcement | null = null;
-
-  get price() {
-    return this.announcement?.price!.replace(/\s/g, '');
-  }
 }
 
 @NgModule({

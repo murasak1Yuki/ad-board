@@ -8,9 +8,10 @@ import {
   RecommendedAnnouncementsComponent
 } from '@announcements-pages/recommended-announcements/recommended-announcements.component';
 import { AnnouncementViewComponent } from './pages/announcement-view/announcement-view.component';
-import { GalleryModule } from "@shared/components/gallery/gallery.component";
-import { BreadcrumbModule } from "primeng/breadcrumb";
-import { SkeletonModule } from "primeng/skeleton";
+import { GalleryModule } from '@shared/components/gallery/gallery.component';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { SkeletonModule } from 'primeng/skeleton';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   declarations: [RecommendedAnnouncementsComponent, AnnouncementViewComponent],
@@ -22,6 +23,7 @@ import { SkeletonModule } from "primeng/skeleton";
     GalleryModule,
     BreadcrumbModule,
     SkeletonModule,
+    ButtonModule,
   ],
 })
 export class AnnouncementsModule {}

@@ -58,11 +58,9 @@ export class CreateAnnouncementComponent implements OnInit {
     }
     this._imagesService.uploadImages(this.selectedImages).subscribe({
       next: (imageUrls) => {
-        const { category, name, phone, price, location, description } =
-          this.newAnnouncementForm.value;
+        const { category, name, phone, price, location, description } = this.newAnnouncementForm.value;
         const newAnnouncement: Announcement = {
-          categoryNames:
-            this._categoriesService.getCategoryNamesFromTreeNode(category),
+          categoryNames: this._categoriesService.getCategoryNamesFromTreeNode(category),
           name: name,
           phone: phone,
           price: price.toString(),

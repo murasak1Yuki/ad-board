@@ -4,7 +4,7 @@
       <img [src]="announcement.images[0]" alt="{{ announcement.name }}"/>
     </div>
     <p class="announcement-item__title">{{ announcement.name }}</p>
-    <p class="announcement-item__price">{{ price | currency }}</p>
+    <p class="announcement-item__price">{{ announcement.price | currency }}</p>
     <p class="announcement-item__location">{{ announcement.location }}</p>
     <p class="announcement-item__time">{{ +announcement.date | date:'MM/dd/yyyy'}}</p>
   </a>
