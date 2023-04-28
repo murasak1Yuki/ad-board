@@ -13,6 +13,7 @@ import { Announcement } from '@models/announcement.model';
 import { AnnouncementsService } from '@services/announcements.service';
 import { Router } from '@angular/router';
 import { ImagesService } from '@services/images.service';
+import { AuthService } from '@services/auth.service';
 
 @Component({
   selector: 'app-create-announcement',
@@ -31,6 +32,7 @@ export class CreateAnnouncementComponent implements OnInit {
   constructor(
     private _categoriesService: CategoriesService,
     private _imagesService: ImagesService,
+    private _authService: AuthService,
     private _announcementService: AnnouncementsService,
     private _cdr: ChangeDetectorRef,
     private _router: Router
@@ -67,8 +69,8 @@ export class CreateAnnouncementComponent implements OnInit {
           date: Date.now().toString(),
           location: location,
           desc: description,
+          creatorId: this._authService.user.value?.id!,
           images: imageUrls,
-          id: Math.random().toString(36).substring(2),
         };
         this._announcementService.storeAnnouncement(newAnnouncement)
           .subscribe(() => {

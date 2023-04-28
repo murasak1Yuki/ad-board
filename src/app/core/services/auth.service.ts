@@ -32,8 +32,8 @@ export class AuthService {
           this.handleAuthentication(
             resData.email,
             resData.localId,
-            resData.refreshToken,
             resData.idToken,
+            resData.refreshToken,
             +resData.expiresIn
           );
         })

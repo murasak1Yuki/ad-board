@@ -25,7 +25,7 @@ export class AnnouncementsService {
           for (let key in announcements) {
             announcements[key].id = key;
           }
-          return Object.values(announcements);
+          return Object.values(announcements).reverse();
         }),
         tap((announcements) => {
           this._setAnnouncements(announcements);

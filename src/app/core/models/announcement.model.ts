@@ -1,7 +1,8 @@
 export interface Announcement {
-  id: string;
+  id?: string;
   name: string;
   desc?: string;
+  creatorId: string;
   images: string[];
   phone?: string;
   categoryNames: string[];
