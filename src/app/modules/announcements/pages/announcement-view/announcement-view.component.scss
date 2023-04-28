@@ -11,11 +11,28 @@
   }
 }
 
+p {
+  white-space: pre-wrap;
+}
+
 @media (max-width: 767.98px) {
   .breadcrumb ::ng-deep {
 
     .p-menuitem-text {
       font-size: 0.8rem;
+    }
+  }
+}
+
+@media (max-width: 575.98px) {
+  .skeleton-breadcrumb {
+    display: none;
+  }
+
+  .breadcrumb ::ng-deep {
+
+    .p-breadcrumb {
+      display: none;
     }
   }
 }

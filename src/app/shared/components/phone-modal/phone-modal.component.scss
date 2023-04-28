@@ -3,6 +3,7 @@
   line-height: 2.25rem;
   color: #3B82F6;
   text-decoration: none;
+
   &:hover {
     text-decoration: underline;
   }
@@ -18,5 +19,11 @@
 
   li {
     list-style-type: disc;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .link-phone {
+    font-size: 1.5rem;
   }
 }

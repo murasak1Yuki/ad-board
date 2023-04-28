@@ -37,6 +37,12 @@ export class AnnouncementViewComponent implements OnInit {
     this._announcementInit();
   }
 
+  onOpenOnTheMap() {
+    const locationString = this.announcement?.location;
+    const url = `https://yandex.com/maps/?text=${encodeURIComponent(locationString!)}`;
+    window.open(url, "_blank");
+  }
+
   public showPhoneDialog() {
     const userEmail = this._authService.user.value?.email;
     this._dialogService.open(PhoneModalComponent, {

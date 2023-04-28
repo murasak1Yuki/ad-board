@@ -3,7 +3,7 @@
     <p-breadcrumb
       [model]="categoryItems"
       class="breadcrumb"
-      styleClass="border-none px-0 py-2">
+      styleClass="border-none px-0 pb-2 pt-0">
     </p-breadcrumb>
     <div class="lg:flex xl:flex">
       <div class="sm:col-12 md:col-12 lg:col-8 xl:col-8 py-0 pl-0 lg:pr-4 xl:pr-4">
@@ -14,31 +14,61 @@
       </div>
       <div class="sm:col-12 md:col-12 lg:col-4 xl:col-4 p-0 md:mt-3 sm:mt-3 lg:mt-0 xl:mt-0 mt-3">
         <h2 class="font-semibold text-3xl line-height-2 mb-3">{{ announcement?.price | currency }}</h2>
-        <button (click)="showPhoneDialog()" class="justify-content-center text-xl h-4rem w-full" pButton>
+        <button (click)="showPhoneDialog()" class="justify-content-center h-4rem w-full mb-5" pButton>
           <i class="pi pi-phone text-xl pr-3"></i>
-          <span>Показать номер телефона</span>
+          <span class="sm:text-xl md:text-xl lg:text-lg xl:text-xl">Показать номер телефона</span>
         </button>
+        <h3 class="font-semibold text-2xl line-height-2 mb-2">Адрес</h3>
+        <div class="mb-5">
+          <p class="line-height-3 pb-1">{{ announcement?.location }}</p>
+          <a (click)="onOpenOnTheMap()" class="line-height-3 text-blue-600 cursor-pointer">
+            Открыть на карте
+            <i class="pi pi-external-link"></i>
+          </a>
+        </div>
+        <h3 class="font-semibold text-2xl line-height-2 mb-2">Описание</h3>
+        <p class="line-height-3">{{ announcement?.desc }}</p>
       </div>
     </div>
   </ng-container>
 
 
   <ng-container *ngIf="isLoading">
-    <div class="flex py-4">
+    <div class="hidden sm:hidden md:flex lg:flex xl:flex py-4">
       <div *ngFor="let _ of skeletonArr" class="sm:w-4 md:w-3 lg:w-2 xl:w-2 w-4">
         <p-skeleton height="16px" width="90%"></p-skeleton>
       </div>
     </div>
-    <div class="sm:col-12 md:col-12 lg:col-8 xl:col-8 p-0">
-      <div class="border-round-sm mb-2">
-        <p-skeleton height="450px" width="100%"></p-skeleton>
+    <div class="lg:flex xl:flex">
+      <div class="sm:col-12 md:col-12 lg:col-8 xl:col-8 py-0 pl-0 lg:pr-4 xl:pr-4">
+        <p-skeleton height="30px" styleClass="mb-3" width="50%"></p-skeleton>
+        <div class="border-round-sm mb-2">
+          <p-skeleton height="470px" width="100%"></p-skeleton>
+        </div>
+        <ul class="flex justify-content-start gap-2 w-full">
+          <li *ngFor="let _ of skeletonArr"
+              class="w-3 p-0">
+            <p-skeleton height="100px" width="100%"></p-skeleton>
+          </li>
+        </ul>
       </div>
-      <ul class="flex justify-content-start gap-2 w-full">
-        <li *ngFor="let _ of skeletonArr"
-            class="w-3 p-0">
-          <p-skeleton height="100px" width="100%"></p-skeleton>
-        </li>
-      </ul>
+      <div class="sm:col-12 md:col-12 lg:col-4 xl:col-4 p-0 md:mt-3 sm:mt-3 lg:mt-0 xl:mt-0 mt-3">
+        <p-skeleton height="30px" styleClass="mb-3" width="40%"></p-skeleton>
+        <button [disabled]="true" class="justify-content-center h-4rem w-full mb-5" pButton>
+          <i class="pi pi-spin pi-spinner text-xl mr-3"></i>
+          <span class="sm:text-xl md:text-xl lg:text-lg xl:text-xl">Показать номер телефона</span>
+        </button>
+        <h3 class="font-semibold text-2xl line-height-2 mb-2">Адрес</h3>
+        <div class="mb-5">
+          <p-skeleton height="24px" styleClass="mb-1" width="70%"></p-skeleton>
+          <p-skeleton height="24px" width="30%"></p-skeleton>
+        </div>
+        <h3 class="font-semibold text-2xl line-height-2 mb-2">Описание</h3>
+        <p-skeleton styleClass="mb-1" height="20px" width="90%"></p-skeleton>
+        <p-skeleton styleClass="mb-1" height="20px" width="70%"></p-skeleton>
+        <p-skeleton styleClass="mb-1" height="20px" width="50%"></p-skeleton>
+        <p-skeleton styleClass="mb-1" height="20px" width="30%"></p-skeleton>
+      </div>
     </div>
   </ng-container>
 </div>
