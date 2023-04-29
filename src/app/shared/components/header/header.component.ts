@@ -17,6 +17,7 @@ import { AuthService } from '@services/auth.service';
 import { AuthResponseData } from '@models/auth-response-data.model';
 import { Subscription } from 'rxjs';
 import { User } from '@models/user.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -34,6 +35,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(
     private _dialogService: DialogService,
     private _cdr: ChangeDetectorRef,
+    private _router: Router,
     private _authService: AuthService
   ) {}
 
@@ -41,6 +43,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.menuItems = [
       {
         label: 'Мои объявления',
+        command: () => this._router.navigateByUrl('/my-announcements'),
       },
       {
         label: 'Настройки',

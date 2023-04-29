@@ -5,31 +5,8 @@
   line-height: 2rem;
 }
 
-.announcements-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(12.5rem, 1fr));
-  grid-gap: 1.5rem;
-  justify-content: center;
-}
-
 @media (max-width: 1399.98px) {
   .recommendations-title {
     padding: 0 0 1.5rem 0.8rem;
   }
 }
-
-@media (max-width: 991.98px) {
-  .announcements-grid {
-    grid-template-columns: repeat(2, minmax(12.5rem, 1fr));
-  }
-}
-
-@media (max-width: 575.98px) {
-  .announcements-grid {
-    grid-template-columns: repeat(1, minmax(12.5rem, 1fr));
-  }
-}
-
-
-
-

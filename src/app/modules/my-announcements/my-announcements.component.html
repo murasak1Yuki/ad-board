@@ -1,0 +1,32 @@
+<div class="container">
+  <h4 class="my-announcements-title">Мои объявления</h4>
+  <ng-container *ngIf="announcements.length >= 1 && !isLoading">
+    <div class="announcements-grid">
+      <a class="new-announcement" routerLink="/create-announcement">
+        <i class="pi pi-plus text-6xl" style="color: #3B82F6"></i>
+        <p class="new-announcement__text">Новое объявление</p>
+      </a>
+      <app-announcement-item
+        *ngFor="let announcement of announcements"
+        [announcement]="announcement">
+      </app-announcement-item>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="announcements.length < 1 && !isLoading">
+    Вы не создали ни одного объявления.
+  </ng-container>
+
+  <div class="announcements-grid">
+    <ng-container *ngIf="isLoading">
+      <a class="new-announcement">
+        <i class="pi pi-spin pi-spinner text-6xl" style="color: #3B82F6"></i>
+        <p class="new-announcement__text">Новое объявление</p>
+      </a>
+      <ng-container *ngFor="let _ of skeletonArr">
+        <app-announcement-item></app-announcement-item>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>
+

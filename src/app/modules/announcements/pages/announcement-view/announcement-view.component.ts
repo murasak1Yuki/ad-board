@@ -30,17 +30,19 @@ export class AnnouncementViewComponent implements OnInit {
     private _dialogService: DialogService,
     private _authService: AuthService,
     private _cdr: ChangeDetectorRef,
-    private _announcementsService: AnnouncementsService
+    private _announcementsService: AnnouncementsService,
   ) {}
 
   ngOnInit() {
-    this._announcementInit();
+    this._loadAnnouncement();
   }
 
   onOpenOnTheMap() {
     const locationString = this.announcement?.location;
-    const url = `https://yandex.com/maps/?text=${encodeURIComponent(locationString!)}`;
-    window.open(url, "_blank");
+    const url = `https://yandex.com/maps/?text=${encodeURIComponent(
+      locationString!
+    )}`;
+    window.open(url, '_blank');
   }
 
   public showPhoneDialog() {
@@ -58,7 +60,7 @@ export class AnnouncementViewComponent implements OnInit {
     });
   }
 
-  private _announcementInit() {
+  private _loadAnnouncement() {
     this.isLoading = true;
     this._route.params.subscribe((params: Params) => {
       this._id = params['id'];

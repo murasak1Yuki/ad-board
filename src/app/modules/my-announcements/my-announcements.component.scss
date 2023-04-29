@@ -1,0 +1,35 @@
+.new-announcement {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+  background: rgba(59, 130, 246, 0.04);
+  border: 3px dashed rgba(59, 130, 246, 0.16);
+  border-radius: 4px;
+
+  &__text {
+    line-height: 1.5rem;
+    font-size: 1.125rem;
+    color: #3B82F6;
+  }
+}
+
+.my-announcements-title {
+  padding-bottom: 1.5rem;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+@media (max-width: 1399.98px) {
+  .my-announcements-title {
+    padding: 0 0 1.5rem 0.8rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .new-announcement {
+    padding-block: 1rem;
+  }
+}

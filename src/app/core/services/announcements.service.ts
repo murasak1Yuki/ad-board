@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable, Subject, tap } from 'rxjs';
+import { Observable, Subject, tap } from 'rxjs';
 
 import { Announcement } from '@models/announcement.model';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '@services/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,22 +14,26 @@ export class AnnouncementsService {
   public announcementsChanged$: Observable<Announcement[]> = this._announcementsChanged.asObservable();
   private _announcements: Announcement[] = [];
 
-  constructor(private _http: HttpClient) {}
+  constructor(private _http: HttpClient, private _authService: AuthService) {}
 
-  fetchAnnouncements(): Observable<Announcement[]> {
+  fetchAnnouncements(
+    filterByUser: boolean = false
+  ): Observable<Record<string, Announcement>> {
+    const userId = this._authService.user.value?.id;
+    const filterString = filterByUser
+      ? `orderBy="creatorId"&equalTo="${userId}"`
+      : '';
     return this._http
-      .get<Announcement[]>(
-        environment.firebaseConfig.databaseURL + '/announcements.json'
+      .get<Record<string, Announcement>>(
+        environment.firebaseConfig.databaseURL +
+          `/announcements.json?${filterString}`
       )
       .pipe(
-        map((announcements) => {
+        tap((announcements) => {
           for (let key in announcements) {
             announcements[key].id = key;
           }
-          return Object.values(announcements).reverse();
-        }),
-        tap((announcements) => {
-          this._setAnnouncements(announcements);
+          this._setAnnouncements(Object.values(announcements).reverse());
         })
       );
   }
