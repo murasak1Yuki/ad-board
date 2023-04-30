@@ -30,10 +30,17 @@ export class AnnouncementsService {
       )
       .pipe(
         tap((announcements) => {
-          for (let key in announcements) {
-            announcements[key].id = key;
-          }
-          this._setAnnouncements(Object.values(announcements).reverse());
+          const announcementsArray = Object.entries(announcements).map(
+            ([id, announcement]) => {
+              announcement.id = id;
+              return announcement;
+            }
+          );
+          const announcementsToSet = filterByUser
+            ? announcementsArray.sort((a, b) => +b.date - +a.date)
+            : announcementsArray.reverse();
+
+          this._setAnnouncements(announcementsToSet);
         })
       );
   }
