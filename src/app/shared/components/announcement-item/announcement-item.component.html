@@ -1,12 +1,12 @@
 <ng-container *ngIf="announcement; else skeleton">
-  <a routerLink="/view/{{announcement.id}}" class="announcement-item">
+  <a class="announcement-item" routerLink="/view/{{announcement.id}}">
     <div class="announcement-item__img">
       <img [src]="announcement.images[0]" alt="{{ announcement.name }}"/>
     </div>
     <p class="announcement-item__title">{{ announcement.name }}</p>
     <p class="announcement-item__price">{{ announcement.price | currency }}</p>
     <p class="announcement-item__location">{{ announcement.location }}</p>
-    <p class="announcement-item__time">{{ +announcement.date | date:'MM/dd/yyyy'}}</p>
+    <p class="announcement-item__time">{{ +announcement.date | datetime }}</p>
   </a>
 </ng-container>
 

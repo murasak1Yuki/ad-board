@@ -7,27 +7,27 @@
     </p-breadcrumb>
     <div class="lg:flex xl:flex">
       <div class="sm:col-12 md:col-12 lg:col-8 xl:col-8 py-0 pl-0 lg:pr-4 xl:pr-4">
-        <h2 class="font-semibold text-3xl line-height-2 mb-3">{{ announcement?.name }}</h2>
+        <h2 class="font-semibold text-3xl line-height-2 mb-3">{{ announcement.name }}</h2>
         <app-gallery
           [announcementImages]="announcement!.images"
           [announcementName]="announcement!.name"></app-gallery>
       </div>
       <div class="sm:col-12 md:col-12 lg:col-4 xl:col-4 p-0 md:mt-3 sm:mt-3 lg:mt-0 xl:mt-0 mt-3">
-        <h2 class="font-semibold text-3xl line-height-2 mb-3">{{ announcement?.price | currency }}</h2>
+        <h2 class="font-semibold text-3xl line-height-2 mb-3">{{ announcement.price | currency }}</h2>
         <button (click)="showPhoneDialog()" class="justify-content-center h-4rem w-full mb-5" pButton>
           <i class="pi pi-phone text-xl pr-3"></i>
           <span class="sm:text-xl md:text-xl lg:text-lg xl:text-xl">Показать номер телефона</span>
         </button>
         <h3 class="font-semibold text-2xl line-height-2 mb-2">Адрес</h3>
         <div class="mb-5">
-          <p class="line-height-3 pb-1">{{ announcement?.location }}</p>
+          <p class="line-height-3 pb-1">{{ announcement.location }}</p>
           <a (click)="onOpenOnTheMap()" class="line-height-3 text-blue-600 cursor-pointer">
             Открыть на карте
             <i class="pi pi-external-link"></i>
           </a>
         </div>
         <h3 class="font-semibold text-2xl line-height-2 mb-2">Описание</h3>
-        <p class="line-height-3">{{ announcement?.desc }}</p>
+        <p class="line-height-3">{{ announcement.desc }}</p>
       </div>
     </div>
   </ng-container>

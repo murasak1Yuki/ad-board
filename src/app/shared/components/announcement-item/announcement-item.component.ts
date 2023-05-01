@@ -9,6 +9,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 
 import { Announcement } from '@models/announcement.model';
 import { RouterLink } from '@angular/router';
+import { DatetimeModule } from '@shared/pipes/datetime.pipe';
 
 @Component({
   selector: 'app-announcement-item',
@@ -22,7 +23,14 @@ export class AnnouncementItemComponent {
 
 @NgModule({
   declarations: [AnnouncementItemComponent],
-  imports: [CurrencyPipe, DatePipe, SkeletonModule, NgIf, RouterLink],
+  imports: [
+    CurrencyPipe,
+    DatePipe,
+    SkeletonModule,
+    NgIf,
+    RouterLink,
+    DatetimeModule,
+  ],
   exports: [AnnouncementItemComponent],
 })
 export class AnnouncementItemModule {}

@@ -11,6 +11,7 @@ import { MenuItem } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { PhoneModalComponent } from '@shared/components/phone-modal/phone-modal.component';
 import { AuthService } from '@services/auth.service';
+import { of, switchMap, tap } from "rxjs";
 
 @Component({
   selector: 'app-announcement-view',
@@ -19,11 +20,10 @@ import { AuthService } from '@services/auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AnnouncementViewComponent implements OnInit {
-  public announcement!: Announcement | null;
+  public announcement!: Announcement;
   public categoryItems!: MenuItem[];
   public isLoading: boolean = false;
   public skeletonArr = new Array(3);
-  private _id!: string;
 
   constructor(
     private _route: ActivatedRoute,
@@ -39,9 +39,7 @@ export class AnnouncementViewComponent implements OnInit {
 
   onOpenOnTheMap() {
     const locationString = this.announcement?.location;
-    const url = `https://yandex.com/maps/?text=${encodeURIComponent(
-      locationString!
-    )}`;
+    const url = `https://yandex.com/maps/?text=${encodeURIComponent(locationString!)}`;
     window.open(url, '_blank');
   }
 
@@ -62,25 +60,22 @@ export class AnnouncementViewComponent implements OnInit {
 
   private _loadAnnouncement() {
     this.isLoading = true;
-    this._route.params.subscribe((params: Params) => {
-      this._id = params['id'];
-      const announcements = this._announcementsService.getAnnouncements();
-      if (announcements.length !== 0) {
-        this.announcement = this._announcementsService.getAnnouncementById(
-          this._id
-        );
+    this._route.params.pipe(
+      switchMap((params: Params) => {
+        const announcements = this._announcementsService.getAnnouncements();
+        if (announcements.length !== 0) {
+          return of(this._announcementsService.getAnnouncementById(params['id']));
+        } else {
+          return this._announcementsService.fetchAnnouncementById(params['id']);
+        }
+      }),
+      tap((announcement) => {
+        this.announcement = announcement;
         this._createMenuItemsFromCategories();
-        this.isLoading = false;
-      } else {
-        this._announcementsService
-          .fetchAnnouncementById(this._id)
-          .subscribe((announcement) => {
-            this.announcement = { ...announcement, id: this._id };
-            this._createMenuItemsFromCategories();
-            this.isLoading = false;
-            this._cdr.markForCheck();
-          });
-      }
+        this._cdr.markForCheck();
+      })
+    ).subscribe(() => {
+      this.isLoading = false;
     });
   }
 

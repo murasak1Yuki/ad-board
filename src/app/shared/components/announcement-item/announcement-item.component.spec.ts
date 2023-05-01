@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SkeletonModule } from 'primeng/skeleton';
 import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
+import { DatetimeModule, DatetimePipe } from '@shared/pipes/datetime.pipe';
 
 describe('Component: AnnouncementItem', () => {
   let component: AnnouncementItemComponent;
@@ -13,7 +13,7 @@ describe('Component: AnnouncementItem', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [AnnouncementItemComponent],
-      imports: [RouterTestingModule, SkeletonModule],
+      imports: [RouterTestingModule, SkeletonModule, DatetimeModule],
     }).compileComponents();
   });
 
@@ -63,11 +63,11 @@ describe('Component: AnnouncementItem', () => {
   it('should display the correct date', () => {
     fixture.detectChanges();
     const timestamp = component.announcement!.date;
-    let datePipe = new DatePipe('en-US');
+    let datetimePipe = new DatetimePipe();
     const dateElement = fixture.debugElement.query(
       By.css('.announcement-item__time')
     ).nativeElement.textContent;
-    expect(dateElement).toContain(datePipe.transform(timestamp, 'MM/dd/yyyy'));
+    expect(dateElement).toContain(datetimePipe.transform(+timestamp));
   });
 
   it('should display the correct image and link', () => {

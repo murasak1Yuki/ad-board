@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subject, tap } from 'rxjs';
+import { map, Observable, Subject, tap } from 'rxjs';
 
 import { Announcement } from '@models/announcement.model';
 import { environment } from '../../../environments/environment';
@@ -45,14 +45,20 @@ export class AnnouncementsService {
       );
   }
 
-  fetchAnnouncementById(id: string): Observable<Announcement> {
-    return this._http.get<Announcement>(
-      `${environment.firebaseConfig.databaseURL}/announcements/${id}.json`
-    );
+  fetchAnnouncementById(id: string) {
+    return this._http
+      .get<Announcement>(
+        `${environment.firebaseConfig.databaseURL}/announcements/${id}.json`
+      )
+      .pipe(
+        map((announcement) => {
+          return { ...announcement, id: id };
+        })
+      );
   }
 
   storeAnnouncement(announcement: Announcement) {
-    return this._http.post(
+    return this._http.post<{ [announcementId: string]: string }>(
       environment.firebaseConfig.databaseURL + '/announcements.json',
       announcement
     );
@@ -63,8 +69,7 @@ export class AnnouncementsService {
   }
 
   getAnnouncementById(id: string) {
-    const announcement = this._announcements.find((a) => a.id === id)!;
-    return announcement ? announcement : null;
+    return this._announcements.find((a) => a.id === id)!;
   }
 
   private _setAnnouncements(announcements: Announcement[]) {
