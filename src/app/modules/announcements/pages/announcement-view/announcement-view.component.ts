@@ -53,7 +53,7 @@ export class AnnouncementViewComponent implements OnInit {
         'max-width': '520px',
       },
       data: {
-        phone: this.announcement?.phone,
+        phone: this.announcement?.phone ?? 'Номер телефона не указан.',
       },
     });
   }
