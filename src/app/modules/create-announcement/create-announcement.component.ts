@@ -14,6 +14,7 @@ import { AnnouncementsService } from '@services/announcements.service';
 import { Router } from '@angular/router';
 import { ImagesService } from '@services/images.service';
 import { AuthService } from '@services/auth.service';
+import { YaApiLoaderService } from 'angular8-yandex-maps';
 
 @Component({
   selector: 'app-create-announcement',
@@ -34,6 +35,7 @@ export class CreateAnnouncementComponent implements OnInit {
     private _imagesService: ImagesService,
     private _authService: AuthService,
     private _announcementService: AnnouncementsService,
+    private _yaApiLoaderService: YaApiLoaderService,
     private _cdr: ChangeDetectorRef,
     private _router: Router
   ) {}
@@ -85,6 +87,9 @@ export class CreateAnnouncementComponent implements OnInit {
   }
 
   ngOnInit() {
+    this._yaApiLoaderService.load().subscribe((ymaps) => {
+      new ymaps.SuggestView('location');
+    });
     this._categoriesService.fetchCategories().subscribe((categories) => {
       this._categoriesData = categories;
       this.categoriesTree = this._categoriesService.convertCategoriesToTree(

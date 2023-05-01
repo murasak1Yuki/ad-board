@@ -13,8 +13,14 @@ import { environment } from '../environments/environment';
 import { AuthInterceptorService } from '@services/auth-interceptor.service';
 import { registerLocaleData } from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
+import { AngularYandexMapsModule, YaConfig } from "angular8-yandex-maps";
 
 registerLocaleData(localeRu);
+
+const mapConfig: YaConfig = {
+  apikey: environment.yandexMapsApiKey,
+  lang: 'ru_RU',
+};
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,6 +30,7 @@ registerLocaleData(localeRu);
     BrowserAnimationsModule,
     AnnouncementHeadingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularYandexMapsModule.forRoot(mapConfig),
     AppRoutingModule,
     HeaderModule,
   ],
