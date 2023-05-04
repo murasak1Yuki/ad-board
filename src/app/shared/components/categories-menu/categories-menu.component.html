@@ -3,33 +3,33 @@
   <ul class="col-3 p-0 overflow-y-auto">
     <li (mouseenter)="onHoverCategory($event)"
         *ngFor="let parentCategory of parentCategories"
-        [class.active]="parentCategory === selectedParentCategory"
+        [ngClass]="{ active: parentCategory === selectedParentCategory }"
         class="parent-categories">
       {{ parentCategory.name }}
       <i class="pi pi-chevron-right"></i>
     </li>
   </ul>
-  <div class="grid col-9 pl-5 pr-0 py-0 overflow-y-auto">
-    <h2 class="w-full text-2xl line-height-3 font-semibold pb-3">
+  <div class="subcategories-container">
+    <h2 class="parent-title">
       {{ selectedParentCategory.name }}
       <i class="pi pi-chevron-right font-semibold"></i>
     </h2>
     <ul *ngFor="let childCategory of getChildren(selectedParentCategory); let i = index"
-        class="col-3 pt-0 pb-3 pr-3 pl-0">
+        class="subcategories">
       <h3 class="pb-3 font-semibold">
         {{ childCategory.name }}
-        <i class="pi pi-chevron-right font-semibold" style="font-size: 0.6rem"></i>
+        <i class="pi pi-chevron-right font-semibold" style="font-size: 0.6rem; padding-top: 0.15rem"></i>
       </h3>
       <ng-container *ngFor="let childOfChild of getChildren(childCategory); let j = index">
-        <li *ngIf="j < showItemsCounts[i][childCategory.id]" class="font-normal">
+        <li *ngIf="j < showItemsCounts[i]" class="subcategory-item">
           {{ childOfChild.name }}
         </li>
       </ng-container>
       <button
-        (click)="showItemsCounts[i][childCategory.id] = getChildren(childCategory).length"
-        *ngIf="showItemsCounts[i][childCategory.id] < getChildren(childCategory).length"
-        class="p-button-text">
-        Еще {{ getChildren(childCategory).length - showItemsCounts[i][childCategory.id] }}
+        (click)="showItemsCounts[i] = getChildren(childCategory).length"
+        *ngIf="showItemsCounts[i] < getChildren(childCategory).length"
+        class="more-btn">
+        Еще {{ getChildren(childCategory).length - showItemsCounts[i] }}
       </button>
     </ul>
   </div>

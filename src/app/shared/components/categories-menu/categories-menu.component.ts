@@ -6,7 +6,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { NgForOf, NgIf } from '@angular/common';
+import { NgClass, NgForOf, NgIf } from '@angular/common';
 import { Category } from '@models/category.model';
 
 @Component({
@@ -18,7 +18,7 @@ import { Category } from '@models/category.model';
 export class CategoriesMenuComponent implements OnInit, OnDestroy {
   @Input() categories: Category[] | null = null;
   public parentCategories!: Category[];
-  public showItemsCounts: { [key: number]: number }[] = [];
+  public showItemsCounts: number[] = [];
   public selectedParentCategory!: Category;
 
   ngOnInit() {
@@ -29,7 +29,7 @@ export class CategoriesMenuComponent implements OnInit, OnDestroy {
       );
 
       this.selectedParentCategory = this.parentCategories[0];
-      this._initShowItemsCounts();
+      this._fillShowItemsCounts();
     }
   }
 
@@ -45,24 +45,22 @@ export class CategoriesMenuComponent implements OnInit, OnDestroy {
       (category) => category.name === selectedCategoryName && !category.parentId
     )!;
     this.showItemsCounts = [];
-    this._initShowItemsCounts();
+    this._fillShowItemsCounts();
   }
 
   public getChildren(category: Category): Category[] {
     return this.categories?.filter((c) => c.parentId === category.id) ?? [];
   }
 
-  private _initShowItemsCounts() {
+  private _fillShowItemsCounts() {
     const children = this.getChildren(this.selectedParentCategory);
-    for (let i = 0; i < children.length; i++) {
-      this.showItemsCounts.push({ [children[i].id]: 5 });
-    }
+    this.showItemsCounts = new Array(children.length).fill(3)
   }
 }
 
 @NgModule({
   declarations: [CategoriesMenuComponent],
   exports: [CategoriesMenuComponent],
-  imports: [NgForOf, NgIf],
+  imports: [NgForOf, NgIf, NgClass],
 })
 export class CategoriesMenuModule {}
