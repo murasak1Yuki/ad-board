@@ -1,0 +1,36 @@
+<div class="fixed top-0 left-0 w-full h-full z-1 bg-black-alpha-40"></div>
+<div class="menu-container">
+  <ul class="col-3 p-0 overflow-y-auto">
+    <li (mouseenter)="onHoverCategory($event)"
+        *ngFor="let parentCategory of parentCategories"
+        [class.active]="parentCategory === selectedParentCategory"
+        class="parent-categories">
+      {{ parentCategory.name }}
+      <i class="pi pi-chevron-right"></i>
+    </li>
+  </ul>
+  <div class="grid col-9 pl-5 pr-0 py-0 overflow-y-auto">
+    <h2 class="w-full text-2xl line-height-3 font-semibold pb-3">
+      {{ selectedParentCategory.name }}
+      <i class="pi pi-chevron-right font-semibold"></i>
+    </h2>
+    <ul *ngFor="let childCategory of getChildren(selectedParentCategory); let i = index"
+        class="col-3 pt-0 pb-3 pr-3 pl-0">
+      <h3 class="pb-3 font-semibold">
+        {{ childCategory.name }}
+        <i class="pi pi-chevron-right font-semibold" style="font-size: 0.6rem"></i>
+      </h3>
+      <ng-container *ngFor="let childOfChild of getChildren(childCategory); let j = index">
+        <li *ngIf="j < showItemsCounts[i][childCategory.id]" class="font-normal">
+          {{ childOfChild.name }}
+        </li>
+      </ng-container>
+      <button
+        (click)="showItemsCounts[i][childCategory.id] = getChildren(childCategory).length"
+        *ngIf="showItemsCounts[i][childCategory.id] < getChildren(childCategory).length"
+        class="p-button-text">
+        Еще {{ getChildren(childCategory).length - showItemsCounts[i][childCategory.id] }}
+      </button>
+    </ul>
+  </div>
+</div>

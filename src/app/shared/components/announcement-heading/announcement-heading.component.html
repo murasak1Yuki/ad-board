@@ -2,18 +2,22 @@
   <div class="announcement-container container">
     <a class="announcement-heading__title" routerLink="">Доска объявлений</a>
     <div class="announcement-heading__form-container">
-      <button pButton class="announcement-heading__category-btn">
+      <button (click)="toggleMenu()"
+              [ngClass]="{ 'z-2': isOpen }"
+              class="announcement-heading__category-btn"
+              pButton>
         <i class="pi pi-list"></i>
         <span class="announcement-heading__category-btn-text">
           Все категории
         </span>
       </button>
+      <app-categories-menu *ngIf="isOpen" [categories]="categories"></app-categories-menu>
       <form class="announcement-heading__search-form">
         <input
           class="announcement-heading__search-input"
           placeholder="Поиск по объявлениям"
           type="text">
-        <button pButton class="announcement-heading__search-btn">
+        <button class="announcement-heading__search-btn" pButton>
           <span class="announcement-heading__search-btn-text">Найти</span>
           <i class="pi pi-search pr-2"></i>
         </button>
