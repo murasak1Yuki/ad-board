@@ -1,13 +1,16 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   NgModule,
   OnDestroy,
   OnInit,
+  Output,
 } from '@angular/core';
 import { NgClass, NgForOf, NgIf } from '@angular/common';
 import { Category } from '@models/category.model';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-categories-menu',
@@ -17,9 +20,12 @@ import { Category } from '@models/category.model';
 })
 export class CategoriesMenuComponent implements OnInit, OnDestroy {
   @Input() categories: Category[] | null = null;
+  @Output() close = new EventEmitter<void>();
   public parentCategories!: Category[];
-  public showItemsCounts: number[] = [];
   public selectedParentCategory!: Category;
+  public selectedParentChildren: Category[] = [];
+  public childCategoryChildren: Category[][] = [];
+  public maxItemsToShow: number[] = [];
 
   ngOnInit() {
     document.body.style.overflow = 'hidden';
@@ -29,7 +35,7 @@ export class CategoriesMenuComponent implements OnInit, OnDestroy {
       );
 
       this.selectedParentCategory = this.parentCategories[0];
-      this._fillShowItemsCounts();
+      this._updateChildCategories();
     }
   }
 
@@ -37,30 +43,37 @@ export class CategoriesMenuComponent implements OnInit, OnDestroy {
     document.body.style.overflow = 'auto';
   }
 
-  public onHoverCategory(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    const selectedCategoryName = target.innerText.trim();
-
-    this.selectedParentCategory = this.categories!.find(
-      (category) => category.name === selectedCategoryName && !category.parentId
-    )!;
-    this.showItemsCounts = [];
-    this._fillShowItemsCounts();
+  public onClose() {
+    this.close.emit();
   }
 
-  public getChildren(category: Category): Category[] {
+  public onHoverCategory(parentCategory: Category) {
+    this.selectedParentCategory = parentCategory;
+    this._updateChildCategories();
+  }
+
+  public showAllChildCategories(index: number) {
+    this.maxItemsToShow[index] = this.childCategoryChildren[index].length;
+  }
+
+  private _updateChildCategories() {
+    this.selectedParentChildren = this._getChildren(
+      this.selectedParentCategory
+    );
+    this.childCategoryChildren = this.selectedParentChildren.map(
+      (childCategory) => this._getChildren(childCategory)
+    );
+    this.maxItemsToShow = new Array(this.selectedParentChildren.length).fill(3);
+  }
+
+  private _getChildren(category: Category): Category[] {
     return this.categories?.filter((c) => c.parentId === category.id) ?? [];
-  }
-
-  private _fillShowItemsCounts() {
-    const children = this.getChildren(this.selectedParentCategory);
-    this.showItemsCounts = new Array(children.length).fill(3)
   }
 }
 
 @NgModule({
   declarations: [CategoriesMenuComponent],
   exports: [CategoriesMenuComponent],
-  imports: [NgForOf, NgIf, NgClass],
+  imports: [NgForOf, NgIf, NgClass, RouterLink],
 })
 export class CategoriesMenuModule {}

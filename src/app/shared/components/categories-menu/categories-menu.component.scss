@@ -30,7 +30,7 @@
   flex-wrap: wrap;
   gap: 1rem;
   width: 100%;
-  align-content: start;
+  align-content: flex-start;
   padding: 0 0.5rem 0 2rem;
   overflow-y: auto;
 }
@@ -52,7 +52,7 @@
 .subcategories {
   flex-shrink: 0;
   min-width: 250px;
-  width: 30%;
+  width: 45%;
 
   & > * {
     cursor: pointer;

@@ -12,9 +12,10 @@ import { GalleryModule } from '@shared/components/gallery/gallery.component';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ButtonModule } from 'primeng/button';
+import { RequestedAnnouncementsComponent } from './pages/requested-announcements/requested-announcements.component';
 
 @NgModule({
-  declarations: [RecommendedAnnouncementsComponent, AnnouncementViewComponent],
+  declarations: [RecommendedAnnouncementsComponent, AnnouncementViewComponent, RequestedAnnouncementsComponent],
   imports: [
     AnnouncementsRoutingModule,
     ProgressSpinnerModule,

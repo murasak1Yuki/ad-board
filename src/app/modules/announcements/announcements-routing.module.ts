@@ -7,6 +7,9 @@ import {
 import {
   AnnouncementViewComponent
 } from '@announcements-pages/announcement-view/announcement-view.component';
+import {
+  RequestedAnnouncementsComponent
+} from "@announcements-pages/requested-announcements/requested-announcements.component";
 
 const routes: Routes = [
   {
@@ -16,6 +19,10 @@ const routes: Routes = [
   {
     path: 'view/:id',
     component: AnnouncementViewComponent,
+  },
+  {
+    path: 'requested/:id',
+    component: RequestedAnnouncementsComponent,
   }
 ];
 

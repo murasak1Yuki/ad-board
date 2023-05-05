@@ -1,27 +1,54 @@
 <div class="announcement-heading">
   <div class="announcement-container container">
-    <a class="announcement-heading__title" routerLink="">Доска объявлений</a>
-    <div class="announcement-heading__form-container">
-      <button (click)="toggleMenu()"
-              [ngClass]="{ 'z-2': isOpen }"
-              class="announcement-heading__category-btn"
-              pButton>
-        <i class="pi pi-list"></i>
-        <span class="announcement-heading__category-btn-text">
+    <ng-container *ngIf="!isLoading">
+      <a class="announcement-heading__title" routerLink="">Доска объявлений</a>
+      <div class="announcement-heading__form-container">
+        <button (click)="toggleMenu()"
+                [ngClass]="{ 'z-2': isOpen }"
+                class="announcement-heading__category-btn"
+                pButton>
+          <i class="pi pi-list"></i>
+          <span class="announcement-heading__category-btn-text">
           Все категории
         </span>
-      </button>
-      <app-categories-menu *ngIf="isOpen" [categories]="categories"></app-categories-menu>
-      <form class="announcement-heading__search-form">
-        <input
-          class="announcement-heading__search-input"
-          placeholder="Поиск по объявлениям"
-          type="text">
-        <button class="announcement-heading__search-btn" pButton>
-          <span class="announcement-heading__search-btn-text">Найти</span>
-          <i class="pi pi-search pr-2"></i>
         </button>
-      </form>
-    </div>
+        <app-categories-menu (close)="toggleMenu()" *ngIf="isOpen" [categories]="categories"></app-categories-menu>
+        <form class="announcement-heading__search-form">
+          <input
+            class="announcement-heading__search-input"
+            placeholder="Поиск по объявлениям"
+            type="text">
+          <button class="announcement-heading__search-btn" pButton>
+            <span class="announcement-heading__search-btn-text">Найти</span>
+            <i class="pi pi-search pr-2"></i>
+          </button>
+        </form>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="isLoading">
+      <a class="announcement-heading__title">Доска объявлений</a>
+      <div class="announcement-heading__form-container">
+        <button [disabled]="true"
+                class="announcement-heading__category-btn"
+                pButton>
+          <i class="pi pi-spin pi-spinner"></i>
+          <span class="announcement-heading__category-btn-text">
+          Все категории
+        </span>
+        </button>
+        <form class="announcement-heading__search-form">
+          <input
+            [disabled]="true"
+            class="announcement-heading__search-input"
+            placeholder="Поиск по объявлениям"
+            type="text">
+          <button [disabled]="true" class="announcement-heading__search-btn" pButton>
+            <span class="announcement-heading__search-btn-text">Найти</span>
+            <i class="pi pi-spin pi-spinner mr-2"></i>
+          </button>
+        </form>
+      </div>
+    </ng-container>
   </div>
 </div>
