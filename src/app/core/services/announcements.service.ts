@@ -18,7 +18,7 @@ export class AnnouncementsService {
 
   fetchAnnouncements(
     filterByUser: boolean = false
-  ): Observable<Record<string, Announcement>> {
+  ): Observable<Announcement[]> {
     const userId = this._authService.user.value?.id;
     const filterString = filterByUser
       ? `orderBy="creatorId"&equalTo="${userId}"`
@@ -29,18 +29,19 @@ export class AnnouncementsService {
           `/announcements.json?${filterString}`
       )
       .pipe(
-        tap((announcements) => {
+        map(announcements => {
           const announcementsArray = Object.entries(announcements).map(
             ([id, announcement]) => {
               announcement.id = id;
               return announcement;
             }
           );
-          const announcementsToSet = filterByUser
+          return filterByUser
             ? announcementsArray.sort((a, b) => +b.date - +a.date)
             : announcementsArray.reverse();
-
-          this._setAnnouncements(announcementsToSet);
+        }),
+        tap((announcements) => {
+          this._setAnnouncements(announcements);
         })
       );
   }

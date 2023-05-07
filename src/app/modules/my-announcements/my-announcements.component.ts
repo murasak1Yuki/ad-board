@@ -27,14 +27,14 @@ export class MyAnnouncementsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.loadAnnouncements();
+    this._loadAnnouncements();
   }
 
   ngOnDestroy() {
     this._announcementsSub.unsubscribe();
   }
 
-  public loadAnnouncements() {
+  private _loadAnnouncements() {
     this.isLoading = true;
     this._announcementsService.fetchAnnouncements(true).subscribe(() => {
       this.isLoading = false;

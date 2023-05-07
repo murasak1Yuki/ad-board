@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { NgClass, NgForOf, NgIf } from '@angular/common';
 import { Category } from '@models/category.model';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-categories-menu',
@@ -27,6 +27,8 @@ export class CategoriesMenuComponent implements OnInit, OnDestroy {
   public childCategoryChildren: Category[][] = [];
   public maxItemsToShow: number[] = [];
 
+  constructor(private _router: Router) {}
+
   ngOnInit() {
     document.body.style.overflow = 'hidden';
     if (this.categories && this.categories.length > 0) {
@@ -37,14 +39,31 @@ export class CategoriesMenuComponent implements OnInit, OnDestroy {
       this.selectedParentCategory = this.parentCategories[0];
       this._updateChildCategories();
     }
+    window.addEventListener('resize', (_) => {
+      if (window.innerWidth > 575.98 && document.querySelector('.selected')) {
+        document.querySelector('.selected')!.classList.remove('selected');
+      }
+    });
   }
 
   ngOnDestroy() {
     document.body.style.overflow = 'auto';
   }
 
+  public onParentSelect(parentCategoryUl: HTMLUListElement) {
+    if (window.innerWidth > 575.98) {
+      return;
+    }
+    parentCategoryUl.classList.toggle('selected');
+  }
+
   public onClose() {
     this.close.emit();
+  }
+
+  public onSelect(id: number) {
+    this._router.navigateByUrl(`/requested/${id}`);
+    this.onClose();
   }
 
   public onHoverCategory(parentCategory: Category) {

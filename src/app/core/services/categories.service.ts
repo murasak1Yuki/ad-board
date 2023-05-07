@@ -3,17 +3,30 @@ import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Category } from '@models/category.model';
 import { TreeNode } from 'primeng/api';
+import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoriesService {
+  private _categories: Category[] = [];
+
   constructor(private _http: HttpClient) {}
 
   fetchCategories() {
-    return this._http.get<Category[]>(
-      environment.firebaseConfig.databaseURL + '/categories.json'
-    );
+    return this._http
+      .get<Category[]>(
+        environment.firebaseConfig.databaseURL + '/categories.json'
+      )
+      .pipe(
+        tap((categories) => {
+          this._categories = categories;
+        })
+      );
+  }
+
+  getCategories() {
+    return this._categories;
   }
 
   convertCategoriesToTree(categories: Category[]): TreeNode[] {

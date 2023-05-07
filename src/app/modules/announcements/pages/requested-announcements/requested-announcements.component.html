@@ -1,1 +1,22 @@
-<p>requested-announcements works!</p>
+<div class="container">
+  <ng-container *ngIf="announcements.length >= 1 && !isLoading">
+    <div class="announcements-grid">
+      <app-announcement-item
+        *ngFor="let announcement of announcements"
+        [announcement]="announcement">
+      </app-announcement-item>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="announcements.length < 1 && !isLoading">
+    По такому запросу нет ни одного объявления.
+  </ng-container>
+
+  <ng-container *ngIf="isLoading">
+    <div class="announcements-grid">
+      <ng-container *ngFor="let _ of skeletonArr">
+        <app-announcement-item></app-announcement-item>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>

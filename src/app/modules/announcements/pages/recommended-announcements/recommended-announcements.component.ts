@@ -40,8 +40,7 @@ export class RecommendedAnnouncementsComponent implements OnInit, OnDestroy {
     this._announcementsService.fetchAnnouncements().subscribe(() => {
       this.isLoading = false;
     });
-    this._announcementsSub =
-      this._announcementsService.announcementsChanged$.subscribe(
+    this._announcementsSub = this._announcementsService.announcementsChanged$.subscribe(
         (announcements) => {
           this.announcements = announcements;
           this._cdr.markForCheck();

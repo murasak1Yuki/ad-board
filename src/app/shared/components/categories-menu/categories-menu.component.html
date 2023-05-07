@@ -1,34 +1,40 @@
 <div (click)="onClose()" class="fixed top-0 left-0 w-full h-full z-1 bg-black-alpha-40"></div>
 <div class="menu-container">
-  <ul class="col-3 p-0 overflow-y-auto">
-    <li (mouseenter)="onHoverCategory(parentCategory)"
+  <ul #parentCategoryUl class="categories-aside col-5 lg:col-3 p-0 overflow-y-auto">
+    <li (click)="onParentSelect(parentCategoryUl)"
+        (mouseenter)="onHoverCategory(parentCategory)"
         *ngFor="let parentCategory of parentCategories"
         [ngClass]="{ active: parentCategory === selectedParentCategory }"
         class="parent-categories">
       {{ parentCategory.name }}
       <i class="pi pi-chevron-right"></i>
     </li>
+    <span (click)="onParentSelect(parentCategoryUl)" class="close-category">
+      <i class="pi pi-arrow-left"></i>
+    </span>
   </ul>
   <div class="subcategories-container">
-    <h2 class="parent-title" routerLink="/requested/{{ selectedParentCategory.id }}">
+    <h2 (click)="onSelect(selectedParentCategory.id)" class="parent-title">
       {{ selectedParentCategory.name }}
       <i class="pi pi-chevron-right font-semibold"></i>
     </h2>
     <ul *ngFor="let childCategory of selectedParentChildren; let i = index"
         class="subcategories">
-      <h3 class="pb-1 font-semibold" routerLink="/requested/{{ childCategory.id }}">
+      <h3 (click)="onSelect(childCategory.id)"
+          class="pb-1 font-semibold">
         {{ childCategory.name }}
         <i class="pi pi-chevron-right font-semibold" style="font-size: 0.6rem; padding-top: 0.15rem"></i>
       </h3>
       <ng-container *ngFor="let childOfChild of childCategoryChildren[i]; let j = index">
-        <li *ngIf="j < maxItemsToShow[i]" class="subcategory-item" routerLink="/requested/{{ childOfChild.id }}">
+        <li (click)="onSelect(childOfChild.id)"
+            *ngIf="j < maxItemsToShow[i]"
+            class="subcategory-item">
           {{ childOfChild.name }}
         </li>
       </ng-container>
-      <button
-        (click)="showAllChildCategories(i)"
-        *ngIf="maxItemsToShow[i] < childCategoryChildren[i].length"
-        class="more-btn">
+      <button (click)="showAllChildCategories(i)"
+              *ngIf="maxItemsToShow[i] < childCategoryChildren[i].length"
+              class="more-btn">
         Еще {{ childCategoryChildren[i].length - maxItemsToShow[i] }}
       </button>
     </ul>

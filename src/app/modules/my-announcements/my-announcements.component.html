@@ -17,8 +17,8 @@
     Вы не создали ни одного объявления.
   </ng-container>
 
-  <div class="announcements-grid">
-    <ng-container *ngIf="isLoading">
+  <ng-container *ngIf="isLoading">
+    <div class="announcements-grid">
       <a class="new-announcement">
         <i class="pi pi-spin pi-spinner text-6xl" style="color: #3B82F6"></i>
         <p class="new-announcement__text">Новое объявление</p>
@@ -26,7 +26,7 @@
       <ng-container *ngFor="let _ of skeletonArr">
         <app-announcement-item></app-announcement-item>
       </ng-container>
-    </ng-container>
-  </div>
+    </div>
+  </ng-container>
 </div>
 
