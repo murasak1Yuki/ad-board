@@ -1,5 +1,9 @@
 <div class="container">
+  <h4 *ngIf="!isLoading" class="requested-announcements-title">Объявления по категории «{{ category.name }}»</h4>
   <ng-container *ngIf="announcements.length >= 1 && !isLoading">
+    <div class="flex justify-content-between pb-4">
+      <p class="text-color-secondary">Всего найдено {{ announcements.length }} <span>{{ countEnding }}</span>.</p>
+    </div>
     <div class="announcements-grid">
       <app-announcement-item
         *ngFor="let announcement of announcements"

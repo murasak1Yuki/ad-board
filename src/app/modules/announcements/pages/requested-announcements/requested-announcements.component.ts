@@ -9,7 +9,7 @@ import { AnnouncementsService } from '@services/announcements.service';
 import { CategoriesService } from '@services/categories.service';
 import { Announcement } from '@models/announcement.model';
 import { Category } from '@models/category.model';
-import { map, of, switchMap, tap } from 'rxjs';
+import { forkJoin, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-requested-announcements',
@@ -21,7 +21,8 @@ export class RequestedAnnouncementsComponent implements OnInit {
   public announcements: Announcement[] = [];
   public skeletonArr = new Array(16);
   public isLoading: boolean = false;
-  private _categoryMode: boolean = false;
+  public countEnding!: string;
+  public category!: Category;
 
   constructor(
     private _route: ActivatedRoute,
@@ -31,18 +32,18 @@ export class RequestedAnnouncementsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // this._route.params.subscribe((params) => {
-    //   const categoryId: number = +params['id'];
-    //   this._categoryMode = params['id'] !== null;
-    //   const categories = this._categoriesService.getCategories();
-    //   const category = categories.find((c) => c.id === categoryId)!;
-    //   this.announcements = this._announcementsService
-    //     .getAnnouncements()
-    //     .filter((a) => a.categoryNames.includes(category.name));
-    //   this.isLoading = false;
-    //   this._cdr.markForCheck();
-    // });
     this._loadAnnouncementsByCategoryName();
+  }
+
+  private _getAnnouncementsEnding() {
+    let lastDigit = this.announcements.length % 10; // Получение последней цифры числа
+    if (lastDigit === 1) {
+      this.countEnding = 'объявление';
+    } else if (lastDigit > 1 && lastDigit < 5) {
+      this.countEnding = 'объявления';
+    } else {
+      this.countEnding = 'объявлений';
+    }
   }
 
   private _loadAnnouncementsByCategoryName() {
@@ -50,41 +51,51 @@ export class RequestedAnnouncementsComponent implements OnInit {
     this._route.params
       .pipe(
         switchMap((params: Params) => {
-          let announcements: Announcement[] =
-            this._announcementsService.getAnnouncements();
-          let categories: Category[] = this._categoriesService.getCategories();
+          const announcements: Announcement[] = this._announcementsService.getAnnouncements();
+          const categories: Category[] = this._categoriesService.getCategories();
           if (announcements.length !== 0 && categories.length !== 0) {
-            const categoryId: number = +params['id'];
-            const category = categories.find((c) => c.id === categoryId)!;
-            const announcementsByCategory = announcements.filter((a) =>
-              a.categoryNames.includes(category.name)
-            );
+            const announcementsByCategory =
+              this._getAnnouncementsByCategoryName(
+                params,
+                categories,
+                announcements
+              );
             return of(announcementsByCategory);
           } else {
-            return this._categoriesService.fetchCategories().pipe(
-              switchMap((categories) => {
-                return this._announcementsService.fetchAnnouncements().pipe(
-                  map((announcements) => {
-                    const categoryId: number = +params['id'];
-                    const category: Category = categories.find(
-                      (c) => c.id === categoryId
-                    )!;
-                    return announcements.filter((a) =>
-                      a.categoryNames.includes(category.name)
-                    );
-                  })
+            return forkJoin([
+              this._categoriesService.fetchCategories(),
+              this._announcementsService.fetchAnnouncements(),
+            ]).pipe(
+              switchMap(([categories, announcements]) => {
+                return of(
+                  this._getAnnouncementsByCategoryName(
+                    params,
+                    categories,
+                    announcements
+                  )
                 );
               })
             );
           }
-        }),
-        tap((announcements) => {
-          this.announcements = announcements;
-          this._cdr.markForCheck();
         })
       )
-      .subscribe(() => {
+      .subscribe((announcements) => {
+        this.announcements = announcements;
+        this._getAnnouncementsEnding();
         this.isLoading = false;
+        this._cdr.markForCheck();
       });
+  }
+
+  private _getAnnouncementsByCategoryName(
+    params: Params,
+    categories: Category[],
+    announcements: Announcement[]
+  ) {
+    const categoryId = +params['id'];
+    this.category = categories.find((c) => c.id === categoryId)!;
+    return announcements.filter((a) =>
+      a.categoryNames.includes(this.category.name)
+    );
   }
 }

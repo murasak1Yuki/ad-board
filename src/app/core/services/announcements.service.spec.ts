@@ -22,8 +22,8 @@ describe('AnnouncementsService', () => {
   });
 
   it('should fetch announcements with filterByUser false', () => {
-    const mockAnnouncements : Record<string, Announcement> = {
-      '1': {
+    const mockAnnouncements : Announcement[] = [
+      {
         creatorId: '0',
         categoryNames: ['testCategory'],
         name: 'Test announcement',
@@ -32,7 +32,7 @@ describe('AnnouncementsService', () => {
         date: Date.now().toString(),
         images: ['test_image.jpg'],
       },
-      '2': {
+      {
         creatorId: '1',
         categoryNames: ['testCategory1'],
         name: 'Test announcement1',
@@ -41,7 +41,7 @@ describe('AnnouncementsService', () => {
         date: Date.now().toString(),
         images: ['test_image1.jpg'],
       },
-      '3': {
+      {
         creatorId: '2',
         categoryNames: ['testCategory2'],
         name: 'Test announcement2',
@@ -50,7 +50,7 @@ describe('AnnouncementsService', () => {
         date: Date.now().toString(),
         images: ['test_image2.jpg'],
       },
-    };
+    ];
     httpClientSpy.get.and.returnValue(of(mockAnnouncements));
 
     announcementsService
