@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, catchError, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, map, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { User } from '@models/user.model';
 import { AuthResponseData } from '@models/auth-response-data.model';
 import { RefreshTokenResponseData } from '@models/refresh-token-response-data.model';
+import { UserInfoModel } from '@models/user-info.model';
 
 @Injectable({
   providedIn: 'root',
@@ -65,6 +66,39 @@ export class AuthService {
       );
   }
 
+  storeUserInfo(userInfo: UserInfoModel) {
+    this._http
+      .post<{ [userDtoId: string]: string }>(
+        environment.firebaseConfig.databaseURL + '/users.json',
+        userInfo
+      )
+      .subscribe();
+  }
+
+  getUserInfo() {
+    return this._http
+      .get<Record<string, UserInfoModel>>(
+        environment.firebaseConfig.databaseURL + '/users.json'
+      )
+      .pipe(
+        map((res) => {
+          return Object.entries(res).map(([id, userInfo]) => {
+            userInfo.userInfoId = id;
+            return userInfo;
+          });
+        }),
+      );
+  }
+
+  updateUserInfo(id: string, newUserInfo: UserInfoModel) {
+    this._http
+      .patch(
+        `${environment.firebaseConfig.databaseURL}/users/${id}.json`,
+        newUserInfo
+      )
+      .subscribe();
+  }
+
   logout() {
     this.user.next(null);
     localStorage.removeItem('userData');
@@ -78,6 +112,7 @@ export class AuthService {
     const userData: {
       email: string;
       id: string;
+      userInfo: UserInfoModel;
       refreshToken: string;
       _token: string;
       _tokenExpirationDate: string;
@@ -88,6 +123,7 @@ export class AuthService {
     const loadedUser = new User(
       userData.email,
       userData.id,
+      userData.userInfo,
       userData.refreshToken,
       userData._token,
       new Date(userData._tokenExpirationDate)
@@ -120,6 +156,7 @@ export class AuthService {
           const refreshedUser = new User(
             user.email,
             user.id,
+            user.userInfo,
             resData.refresh_token,
             resData.id_token,
             new Date(new Date().getTime() + +resData.expires_in * 1000)
@@ -138,11 +175,23 @@ export class AuthService {
     refreshToken: string,
     expiresIn: number
   ) {
-    const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
-    const user = new User(email, userId, refreshToken, token, expirationDate);
-    this.user.next(user);
-    this._autoRefreshIdToken(expiresIn * 1000, user);
-    localStorage.setItem('userData', JSON.stringify(user));
+    this.getUserInfo().subscribe((userInfo) => {
+      const currentUserInfo = userInfo.find((userInfo) => {
+        return userInfo.userId === userId;
+      })!;
+      const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
+      const user = new User(
+        email,
+        userId,
+        currentUserInfo,
+        refreshToken,
+        token,
+        expirationDate
+      );
+      this.user.next(user);
+      this._autoRefreshIdToken(expiresIn * 1000, user);
+      localStorage.setItem('userData', JSON.stringify(user));
+    });
   }
 
   private handleError(errorRes: HttpErrorResponse) {

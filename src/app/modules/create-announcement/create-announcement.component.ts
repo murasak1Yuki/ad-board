@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 import { ImagesService } from '@services/images.service';
 import { AuthService } from '@services/auth.service';
 import { YaApiLoaderService } from 'angular8-yandex-maps';
+import { UserInfoModel } from '@models/user-info.model';
 
 @Component({
   selector: 'app-create-announcement',
@@ -74,7 +75,18 @@ export class CreateAnnouncementComponent implements OnInit {
           creatorId: this._authService.user.value?.id!,
           images: imageUrls,
         };
-        this._announcementService.storeAnnouncement(newAnnouncement)
+        const newUserInfo: UserInfoModel = {
+          userId: this._authService.user.value?.id!,
+          phone: phone,
+          name: '',
+          location: location,
+        };
+        this._authService.updateUserInfo(
+          this._authService.user.value?.userInfo.userInfoId!,
+          newUserInfo
+        );
+        this._announcementService
+          .storeAnnouncement(newAnnouncement)
           .subscribe(() => {
             this._router.navigateByUrl('');
           });

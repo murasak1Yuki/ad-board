@@ -20,6 +20,7 @@ import { NgIf } from '@angular/common';
 import { Observable } from 'rxjs';
 import { AuthService } from '@services/auth.service';
 import { AuthResponseData } from '@models/auth-response-data.model';
+import { UserInfoModel } from '@models/user-info.model';
 
 @Component({
   selector: 'app-login-modal',
@@ -45,9 +46,8 @@ export class LoginModalComponent implements OnInit {
   }
 
   onShowPassword() {
-    this.signUpPasswordInputType = this.signUpPasswordInputType === 'password'
-      ? 'text'
-      : 'password';
+    this.signUpPasswordInputType =
+      this.signUpPasswordInputType === 'password' ? 'text' : 'password';
     this.showPassword = !this.showPassword;
   }
 
@@ -75,6 +75,15 @@ export class LoginModalComponent implements OnInit {
 
     authObs$.subscribe({
       next: (responseData: AuthResponseData) => {
+        if (!this.isLoginMode) {
+          const userDto: UserInfoModel = {
+            userId: responseData.localId,
+            name: '',
+            phone: '',
+            location: '',
+          };
+          this._authService.storeUserInfo(userDto);
+        }
         this.isLoading = false;
         this._dialogRef.close(responseData);
       },

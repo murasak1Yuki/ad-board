@@ -3,9 +3,9 @@
     <div class="flex flex-column mb-4">
       <div class="mb-3">
         <input
+          class="w-full"
           formControlName="email"
           pInputText
-          class="w-full"
           placeholder="Почта"
           type="email">
         <small
@@ -50,8 +50,22 @@
       </small>
     </div>
     <div class="flex justify-content-center gap-3">
-      <button [disabled]="!authForm.valid" label="Войти" pButton type="submit"></button>
-      <button (click)="switchMode()" class="p-button-text" label="Регистрация" pButton type="button"></button>
+      <button
+        [disabled]="!authForm.valid || isLoading"
+        [icon]="isLoading ? 'pi pi-spin pi-spinner' : ''"
+        iconPos="right"
+        label="Войти"
+        pButton
+        type="submit">
+      </button>
+      <button
+        (click)="switchMode()"
+        [disabled]="isLoading"
+        class="p-button-text"
+        label="Регистрация"
+        pButton
+        type="button">
+      </button>
     </div>
   </form>
 </ng-container>
@@ -61,9 +75,9 @@
     <div class="flex flex-column mb-4">
       <div class="mb-3">
         <input
+          class="w-full"
           formControlName="email"
           pInputText
-          class="w-full"
           placeholder="Почта"
           type="email">
         <small
@@ -126,8 +140,22 @@
       </small>
     </div>
     <div class="flex flex-wrap justify-content-center gap-3">
-      <button [disabled]="!authForm.valid" label="Зарегистрироваться" pButton type="submit"></button>
-      <button (click)="switchMode()" class="p-button-text" label="Вход" pButton type="button"></button>
+      <button
+        [disabled]="!authForm.valid || isLoading"
+        [icon]="isLoading ? 'pi pi-spin pi-spinner' : ''"
+        iconPos="right"
+        label="Зарегистрироваться"
+        pButton
+        type="submit">
+      </button>
+      <button
+        (click)="switchMode()"
+        [disabled]="isLoading"
+        class="p-button-text"
+        label="Вход"
+        pButton
+        type="button">
+      </button>
     </div>
   </form>
 </ng-template>

@@ -72,9 +72,6 @@ export class RequestedAnnouncementsComponent implements OnInit {
           return +b.price! - +a.price!;
         });
         break;
-      default:
-        // Обработка непредвиденных ситуаций
-        break;
     }
   }
 
