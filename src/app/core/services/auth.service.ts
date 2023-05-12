@@ -6,6 +6,7 @@ import { User } from '@models/user.model';
 import { AuthResponseData } from '@models/auth-response-data.model';
 import { RefreshTokenResponseData } from '@models/refresh-token-response-data.model';
 import { UserInfoModel } from '@models/user-info.model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class AuthService {
   user = new BehaviorSubject<User | null>(null);
   private tokenExpirationTime!: ReturnType<typeof setTimeout> | null;
 
-  constructor(private _http: HttpClient) {}
+  constructor(private _http: HttpClient, private _router: Router) {}
 
   signup(email: string, password: string) {
     return this._http
@@ -28,7 +29,7 @@ export class AuthService {
         }
       )
       .pipe(
-        catchError(this.handleError),
+        catchError(this.handleAuthError),
         tap((resData) => {
           this.handleAuthentication(
             resData.email,
@@ -53,7 +54,7 @@ export class AuthService {
         }
       )
       .pipe(
-        catchError(this.handleError),
+        catchError(this.handleAuthError),
         tap((resData) => {
           this.handleAuthentication(
             resData.email,
@@ -75,7 +76,7 @@ export class AuthService {
       .subscribe();
   }
 
-  getUserInfo() {
+  getUsersInfo() {
     return this._http
       .get<Record<string, UserInfoModel>>(
         environment.firebaseConfig.databaseURL + '/users.json'
@@ -86,17 +87,40 @@ export class AuthService {
             userInfo.userInfoId = id;
             return userInfo;
           });
-        }),
+        })
       );
   }
 
   updateUserInfo(id: string, newUserInfo: UserInfoModel) {
-    this._http
-      .patch(
+    return this._http
+      .patch<UserInfoModel>(
         `${environment.firebaseConfig.databaseURL}/users/${id}.json`,
         newUserInfo
       )
-      .subscribe();
+      .pipe(catchError(this.handleUserInfoError));
+  }
+
+  changePassword(newPassword: string) {
+    return this._http.post<AuthResponseData>(
+      'https://identitytoolkit.googleapis.com/v1/accounts:update?key=' +
+        environment.firebaseConfig.apiKey,
+      {
+        idToken: this.user.value?.token,
+        password: newPassword,
+        returnSecureToken: true,
+      }
+    ).pipe(
+      catchError(this.handleAuthError),
+      tap(resData => {
+        this.handleAuthentication(
+          resData.email,
+          resData.localId,
+          resData.idToken,
+          resData.refreshToken,
+          +resData.expiresIn,
+        )
+      })
+    );
   }
 
   logout() {
@@ -106,6 +130,7 @@ export class AuthService {
       clearTimeout(this.tokenExpirationTime);
     }
     this.tokenExpirationTime = null;
+    this._router.navigateByUrl('');
   }
 
   autoLogin() {
@@ -175,8 +200,8 @@ export class AuthService {
     refreshToken: string,
     expiresIn: number
   ) {
-    this.getUserInfo().subscribe((userInfo) => {
-      const currentUserInfo = userInfo.find((userInfo) => {
+    this.getUsersInfo().subscribe((usersInfo) => {
+      const currentUserInfo = usersInfo.find((userInfo) => {
         return userInfo.userId === userId;
       })!;
       const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
@@ -194,22 +219,26 @@ export class AuthService {
     });
   }
 
-  private handleError(errorRes: HttpErrorResponse) {
-    let errorMessage = 'Произошла неизвестная ошибка.';
-    if (!errorRes.error || !errorRes.error.error) {
-      return throwError(() => errorMessage);
-    }
-    switch (errorRes.error.error.message) {
-      case 'EMAIL_EXISTS':
-        errorMessage = 'Данный адрес электронной почты уже существует.';
-        break;
-      case 'EMAIL_NOT_FOUND':
-        errorMessage = 'Этой электронной почты не существует.';
-        break;
-      case 'INVALID_PASSWORD':
-        errorMessage = 'Этот пароль неверен.';
-        break;
-    }
+  private handleUserInfoError(errorRes: HttpErrorResponse) {
+    const errorMessageMap: { [errorCode: number]: string } = {
+      0: 'Произошла неизвестная ошибка.',
+      400: 'Некорректный запрос.',
+      401: 'Пользователь не авторизован для выполнения желаемого действия.',
+      404: 'База данных не была найдена.',
+    };
+    return throwError(() => errorMessageMap[errorRes.status]);
+  }
+
+  private handleAuthError(errorRes: HttpErrorResponse) {
+    const errorMessageMap: { [errorCode: string]: string } = {
+      EMAIL_EXISTS: 'Данный адрес электронной почты уже существует.',
+      EMAIL_NOT_FOUND: 'Этой электронной почты не существует.',
+      INVALID_PASSWORD: 'Этот пароль неверен.',
+    };
+    const errorMessage =
+      !errorRes.error || !errorRes.error.error
+        ? 'Произошла неизвестная ошибка.'
+        : errorMessageMap[errorRes.error.error.message];
     return throwError(() => errorMessage);
   }
 }

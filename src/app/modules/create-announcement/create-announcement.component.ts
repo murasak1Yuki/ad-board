@@ -75,16 +75,21 @@ export class CreateAnnouncementComponent implements OnInit {
           creatorId: this._authService.user.value?.id!,
           images: imageUrls,
         };
-        const newUserInfo: UserInfoModel = {
-          userId: this._authService.user.value?.id!,
-          phone: phone,
-          name: '',
-          location: location,
-        };
-        this._authService.updateUserInfo(
-          this._authService.user.value?.userInfo.userInfoId!,
-          newUserInfo
-        );
+        if (
+          !this._authService.user.value?.userInfo.phone &&
+          !this._authService.user.value?.userInfo.location
+        ) {
+          const newUserInfo: UserInfoModel = {
+            userId: this._authService.user.value?.id!,
+            phone: phone,
+            name: '',
+            location: location,
+          };
+          this._authService.updateUserInfo(
+            this._authService.user.value?.userInfo.userInfoId!,
+            newUserInfo
+          );
+        }
         this._announcementService
           .storeAnnouncement(newAnnouncement)
           .subscribe(() => {
@@ -108,12 +113,14 @@ export class CreateAnnouncementComponent implements OnInit {
         this._categoriesData
       );
     });
+    const userPhone = this._authService.user.value?.userInfo.phone!;
+    const userLocation = this._authService.user.value?.userInfo.location!;
     this.newAnnouncementForm = new FormGroup({
       category: new FormControl<TreeNode | null>(null, Validators.required),
       name: new FormControl<string | null>(null, Validators.required),
-      phone: new FormControl<string | null>(null),
+      phone: new FormControl<string | null>(userPhone),
       description: new FormControl<string | null>(null),
-      location: new FormControl<string | null>(null, Validators.required),
+      location: new FormControl<string | null>(userLocation, Validators.required),
       price: new FormControl<number>(0, Validators.min(0)),
     });
   }

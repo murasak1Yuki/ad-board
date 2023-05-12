@@ -1,7 +1,8 @@
 import { AnnouncementsService } from '@services/announcements.service';
 import { Observable, of, Subject } from 'rxjs';
 import { AuthService } from '@services/auth.service';
-import {Announcement} from "@models/announcement.model";
+import { Announcement } from '@models/announcement.model';
+import { Router } from '@angular/router';
 
 describe('AnnouncementsService', () => {
   let httpClientSpy: { get: jasmine.Spy };
@@ -10,7 +11,7 @@ describe('AnnouncementsService', () => {
 
   beforeEach(() => {
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['get', 'post']);
-    authService = new AuthService(httpClientSpy as any);
+    authService = new AuthService(httpClientSpy as any, new Router());
     announcementsService = new AnnouncementsService(
       httpClientSpy as any,
       authService
@@ -22,7 +23,7 @@ describe('AnnouncementsService', () => {
   });
 
   it('should fetch announcements with filterByUser false', () => {
-    const mockAnnouncements : Announcement[] = [
+    const mockAnnouncements: Announcement[] = [
       {
         creatorId: '0',
         categoryNames: ['testCategory'],
@@ -63,10 +64,14 @@ describe('AnnouncementsService', () => {
 
   it('should initialize private properties', () => {
     expect(announcementsService['_announcements']).toEqual([]);
-    expect(announcementsService['_announcementsChanged']).toEqual(jasmine.any(Subject));
+    expect(announcementsService['_announcementsChanged']).toEqual(
+      jasmine.any(Subject)
+    );
   });
 
   it('should initialize public properties', () => {
-    expect(announcementsService.announcementsChanged$).toEqual(jasmine.any(Observable));
+    expect(announcementsService.announcementsChanged$).toEqual(
+      jasmine.any(Observable)
+    );
   });
 });

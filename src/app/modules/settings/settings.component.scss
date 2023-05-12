@@ -1,0 +1,25 @@
+input.ng-invalid.ng-touched {
+  border: 1px solid red;
+}
+
+.user-name {
+  padding: 0 1.5rem 0 0;
+}
+
+.input-label {
+  display: flex;
+  padding-bottom: 1rem;
+  line-height: 1.5rem;
+}
+
+.submit-btn {
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+@media (max-width: 991.98px) {
+  .user-name {
+    padding: 0 0 2rem 0;
+  }
+}

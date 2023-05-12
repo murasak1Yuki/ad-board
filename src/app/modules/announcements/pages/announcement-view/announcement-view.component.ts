@@ -11,7 +11,7 @@ import { MenuItem } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { PhoneModalComponent } from '@shared/components/phone-modal/phone-modal.component';
 import { AuthService } from '@services/auth.service';
-import { of, switchMap, tap } from "rxjs";
+import { of, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-announcement-view',
@@ -24,13 +24,14 @@ export class AnnouncementViewComponent implements OnInit {
   public categoryItems!: MenuItem[];
   public isLoading: boolean = false;
   public skeletonArr = new Array(3);
+  private _username!: string;
 
   constructor(
     private _route: ActivatedRoute,
     private _dialogService: DialogService,
     private _authService: AuthService,
     private _cdr: ChangeDetectorRef,
-    private _announcementsService: AnnouncementsService,
+    private _announcementsService: AnnouncementsService
   ) {}
 
   ngOnInit() {
@@ -44,10 +45,9 @@ export class AnnouncementViewComponent implements OnInit {
   }
 
   public showPhoneDialog() {
-    const userEmail = this._authService.user.value?.email;
     this._dialogService.open(PhoneModalComponent, {
       dismissableMask: true,
-      header: userEmail,
+      header: this._username ? this._username : 'Имя не указано.',
       width: '100%',
       style: {
         'max-width': '520px',
@@ -60,23 +60,31 @@ export class AnnouncementViewComponent implements OnInit {
 
   private _loadAnnouncement() {
     this.isLoading = true;
-    this._route.params.pipe(
-      switchMap((params: Params) => {
-        const announcements = this._announcementsService.getAnnouncements();
-        if (announcements.length !== 0) {
-          return of(this._announcementsService.getAnnouncementById(params['id']));
-        } else {
-          return this._announcementsService.fetchAnnouncementById(params['id']);
-        }
-      }),
-      tap((announcement) => {
-        this.announcement = announcement;
-        this._createMenuItemsFromCategories();
-        this._cdr.markForCheck();
-      })
-    ).subscribe(() => {
-      this.isLoading = false;
-    });
+    this._route.params
+      .pipe(
+        switchMap((params: Params) => {
+          const announcements = this._announcementsService.getAnnouncements();
+          if (announcements.length !== 0) {
+            return of(this._announcementsService.getAnnouncementById(params['id']));
+          } else {
+            return this._announcementsService.fetchAnnouncementById(params['id']);
+          }
+        }),
+        tap((announcement) => {
+          this.announcement = announcement;
+          this._createMenuItemsFromCategories();
+          this._cdr.markForCheck();
+
+          this._authService.getUsersInfo().subscribe(usersInfo => {
+            this._username = usersInfo.find(userInfo => {
+              return userInfo.userId === announcement.creatorId;
+            })?.name!;
+          })
+        }),
+      )
+      .subscribe(() => {
+        this.isLoading = false;
+      });
   }
 
   private _createMenuItemsFromCategories() {

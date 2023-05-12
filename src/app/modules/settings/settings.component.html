@@ -1,0 +1,118 @@
+<div class="container">
+  <h2 class="font-semibold text-2xl line-height-2 mb-4">Настройки</h2>
+  <form (ngSubmit)="onUserInfoSubmit()" [formGroup]="userInfoForm" class="mb-6">
+    <div class="lg:flex xl:flex mb-5">
+      <div class="lg:col-4 xl:col-4 user-name">
+        <label class="input-label" for="user-name"> Имя </label>
+        <span class="p-input-icon-right w-full">
+          <i *ngIf="userInfoForm.disabled" class="pi pi-spin pi-spinner"></i>
+          <input
+            class="w-full"
+            formControlName="name"
+            id="user-name"
+            pInputText
+            placeholder="Не указано"
+            type="text"/>
+        </span>
+      </div>
+      <div class="lg:col-4 xl:col-4 p-0">
+        <label class="input-label" for="phone">Телефон</label>
+        <span class="p-input-icon-right w-full">
+          <i *ngIf="userInfoForm.disabled" class="pi pi-spin pi-spinner"></i>
+          <p-inputMask
+            formControlName="phone"
+            id="phone"
+            mask="8 999 999-99-99"
+            placeholder="8 ___ ___-__-__"
+            styleClass="w-full">
+          </p-inputMask>
+        </span>
+      </div>
+    </div>
+    <div class="lg:col-8 xl:col-8 p-0 mb-5">
+      <label class="input-label" for="location">
+        Адрес (будет указываться в объявлениях по умолчанию)
+      </label>
+      <span class="p-input-icon-right w-full">
+        <i *ngIf="userInfoForm.disabled" class="pi pi-spin pi-spinner"></i>
+        <input
+          class="w-full"
+          formControlName="location"
+          id="location"
+          pInputText
+          placeholder="Не указан"
+          type="text"/>
+      </span>
+    </div>
+    <div class="flex gap-3 align-items-center">
+      <button
+        [disabled]="userInfoForm.invalid || !isUserInfoChanged"
+        class="submit-btn"
+        pButton
+        type="submit">
+        Сохранить
+      </button>
+      <span
+        *ngIf="isUserInfoSaved"
+        class="text-green-500 fadein animation-duration-1000">
+        <i class="pi pi-check-circle"></i>
+        Изменения сохранены
+      </span>
+    </div>
+  </form>
+  <h2 class="font-semibold text-2xl line-height-2 mb-4">Смена пароля</h2>
+  <form (ngSubmit)="onPasswordChange()" [formGroup]="newPasswordForm">
+    <div class="flex flex-column lg:col-4 xl:col-4 p-0 mb-5">
+      <span class="p-input-icon-right w-full">
+        <i (click)="onShowPassword()" *ngIf="!showPassword" class="pi pi-eye"></i>
+        <i (click)="onShowPassword()" *ngIf="showPassword" class="pi pi-eye-slash"></i>
+        <input
+          [type]="signUpPasswordInputType"
+          class="w-full"
+          formControlName="password"
+          pInputText
+          placeholder="Новый пароль"/>
+      </span>
+      <small
+        *ngIf="newPasswordForm.get('password')?.errors?.['required']
+          && newPasswordForm.get('password')!.touched"
+        class="p-error pt-1 pl-2">
+        Пароль обязателен к заполнению.
+      </small>
+      <small
+        *ngIf="newPasswordForm.get('password')?.errors?.['minlength']
+          && newPasswordForm.get('password')!.touched"
+        class="p-error pt-1 pl-2">
+        Пароль должен содержать минимум 6 символов.
+      </small>
+      <input
+        [type]="signUpPasswordInputType"
+        class="mt-3 w-full"
+        formControlName="passwordConfirmation"
+        pInputText
+        placeholder="Подтвердите новый пароль"/>
+      <small
+        *ngIf="newPasswordForm.get('passwordConfirmation')?.errors?.['passwordMismatch']
+        && newPasswordForm.get('passwordConfirmation')!.touched"
+        class="p-error pt-1 pl-2">
+        Пароли не совпадают.
+      </small>
+      <small
+        *ngIf="newPasswordForm.get('passwordConfirmation')?.errors?.['required']
+        && newPasswordForm.get('passwordConfirmation')!.touched"
+        class="p-error pt-1 pl-2">
+        Подтверждение пароля обязательно к заполнению.
+      </small>
+      <small *ngIf="error" class="p-error pt-1 pl-2">
+        {{ error }}
+      </small>
+    </div>
+    <button
+      [disabled]="newPasswordForm.invalid || newPasswordForm.disabled"
+      class="submit-btn"
+      pButton
+      type="submit">
+      Изменить пароль
+    </button>
+  </form>
+</div>

@@ -47,6 +47,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       },
       {
         label: 'Настройки',
+        command: () => this._router.navigateByUrl('/settings'),
       },
       {
         label: 'Выйти',
@@ -56,6 +57,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this._userSub = this._authService.user.subscribe((user) => {
       this.isAuthenticated = !!user;
       this.user = user;
+      this._cdr.markForCheck();
     });
   }
 

@@ -6,11 +6,9 @@ import {
   OnInit,
 } from '@angular/core';
 import {
-  AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
-  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -21,6 +19,7 @@ import { Observable } from 'rxjs';
 import { AuthService } from '@services/auth.service';
 import { AuthResponseData } from '@models/auth-response-data.model';
 import { UserInfoModel } from '@models/user-info.model';
+import { CustomValidators } from "../../../core/custom-validators";
 
 @Component({
   selector: 'app-login-modal',
@@ -46,8 +45,9 @@ export class LoginModalComponent implements OnInit {
   }
 
   onShowPassword() {
-    this.signUpPasswordInputType =
-      this.signUpPasswordInputType === 'password' ? 'text' : 'password';
+    this.signUpPasswordInputType = this.signUpPasswordInputType === 'password'
+      ? 'text'
+      : 'password';
     this.showPassword = !this.showPassword;
   }
 
@@ -106,7 +106,7 @@ export class LoginModalComponent implements OnInit {
   }
 
   private _handleError() {
-    this.authForm.valueChanges.subscribe((_) => {
+    this.authForm.valueChanges.subscribe(() => {
       if (this.error) {
         this.error = null;
         this._cdr.markForCheck();
@@ -133,34 +133,9 @@ export class LoginModalComponent implements OnInit {
           ]),
           passwordConfirmation: new FormControl(null, [Validators.required]),
         },
-        {
-          validators: [this._passwordsMatchValidator],
-        }
+        [CustomValidators.passwordsMatchValidator]
       );
     }
-  }
-
-  private _passwordsMatchValidator(
-    form: AbstractControl
-  ): ValidationErrors | null {
-    const { password, passwordConfirmation } = form.value;
-    const passwordConfirmationControl = form.get('passwordConfirmation');
-    let passwordConfirmationControlErrors = passwordConfirmationControl!.errors;
-
-    password === passwordConfirmation || (!password && !passwordConfirmation)
-      ? delete passwordConfirmationControlErrors?.['passwordMismatch']
-      : (passwordConfirmationControlErrors = {
-          ...passwordConfirmationControlErrors,
-          passwordMismatch: true,
-        });
-
-    passwordConfirmationControl?.setErrors(
-      Object.keys(passwordConfirmationControlErrors ?? {}).length
-        ? passwordConfirmationControlErrors
-        : null
-    );
-
-    return null;
   }
 }
 

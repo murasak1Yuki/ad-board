@@ -34,6 +34,23 @@ input.ng-invalid.ng-touched {
   line-height: 28px;
 }
 
+@media (max-width: 767.98px) {
+  .file-upload ::ng-deep {
+    .file-upload-label {
+      padding-block: 0.5rem;
+    }
+
+    .p-fileupload .p-fileupload-buttonbar .p-button {
+      margin: 0;
+    }
+
+    .p-fileupload-buttonbar {
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+    }
+  }
+}
 
 @media (max-width: 575.98px) {
   .file-upload ::ng-deep {
@@ -51,24 +68,6 @@ input.ng-invalid.ng-touched {
           width: 75%;
         }
       }
-    }
-  }
-}
-
-@media (max-width: 767.98px) {
-  .file-upload ::ng-deep {
-    .file-upload-label {
-      padding-block: 0.5rem;
-    }
-
-    .p-fileupload .p-fileupload-buttonbar .p-button {
-      margin: 0;
-    }
-
-    .p-fileupload-buttonbar {
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
     }
   }
 }
