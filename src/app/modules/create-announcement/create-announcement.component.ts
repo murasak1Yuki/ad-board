@@ -104,9 +104,6 @@ export class CreateAnnouncementComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._yaApiLoaderService.load().subscribe((ymaps) => {
-      new ymaps.SuggestView('location');
-    });
     this._categoriesService.fetchCategories().subscribe((categories) => {
       this._categoriesData = categories;
       this.categoriesTree = this._categoriesService.convertCategoriesToTree(
@@ -119,9 +116,22 @@ export class CreateAnnouncementComponent implements OnInit {
       category: new FormControl<TreeNode | null>(null, Validators.required),
       name: new FormControl<string | null>(null, Validators.required),
       phone: new FormControl<string | null>(userPhone),
-      description: new FormControl<string | null>(null),
-      location: new FormControl<string | null>(userLocation, Validators.required),
+      description: new FormControl<string | null>(
+        null,
+        Validators.maxLength(250)
+      ),
+      location: new FormControl<string | null>(
+        userLocation,
+        Validators.required
+      ),
       price: new FormControl<number>(0, Validators.min(0)),
+    });
+    this._yaApiLoaderService.load().subscribe((ymaps) => {
+      const suggestView = new ymaps.SuggestView('location');
+      suggestView.events.add('select', (event) => {
+        const address = event.get('item').value;
+        this.newAnnouncementForm.get('location')?.setValue(address);
+      });
     });
   }
 }

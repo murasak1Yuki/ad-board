@@ -35,7 +35,11 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit() {
     this._yaApiLoaderService.load().subscribe((ymaps) => {
-      new ymaps.SuggestView('location');
+      const suggestView = new ymaps.SuggestView('location');
+      suggestView.events.add('select', (event) => {
+        const address = event.get('item').value;
+        this.userInfoForm.get('location')?.setValue(address);
+      });
     });
     this._initUserInfoSettings();
     this._initNewPasswordForm();
@@ -117,7 +121,10 @@ export class SettingsComponent implements OnInit {
         Validators.maxLength(24),
       ]),
       phone: new FormControl<string | null>(null),
-      location: new FormControl<string | null>(null),
+      location: new FormControl<string | null>(null, [
+        Validators.minLength(4),
+        Validators.maxLength(50),
+      ]),
     });
     this.userInfoForm.disable();
     this._authService.getUsersInfo().subscribe((usersInfo) => {

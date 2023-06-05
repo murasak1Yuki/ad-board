@@ -14,6 +14,18 @@
             placeholder="Не указано"
             type="text"/>
         </span>
+        <small
+          *ngIf="userInfoForm.get('name')?.errors?.['minlength']
+          && userInfoForm.get('name')!.touched"
+          class="p-error pt-1">
+          Имя пользователя должно содержать минимум 3 символа.
+        </small>
+        <small
+          *ngIf="userInfoForm.get('name')?.errors?.['maxlength']
+          && userInfoForm.get('name')!.touched"
+          class="p-error pt-1">
+          Имя пользователя должно содержать не более 24 символов.
+        </small>
       </div>
       <div class="lg:col-4 xl:col-4 p-0">
         <label class="input-label" for="phone">Телефон</label>
@@ -43,6 +55,18 @@
           placeholder="Не указан"
           type="text"/>
       </span>
+      <small
+        *ngIf="userInfoForm.get('location')?.errors?.['minlength']
+          && userInfoForm.get('location')!.touched"
+        class="p-error pt-1">
+        Адрес должен содержать минимум 4 символа.
+      </small>
+      <small
+        *ngIf="userInfoForm.get('location')?.errors?.['maxlength']
+          && userInfoForm.get('location')!.touched"
+        class="p-error pt-1">
+        Адрес должен содержать не более 50 символов.
+      </small>
     </div>
     <div class="flex gap-3 align-items-center">
       <button
@@ -76,14 +100,14 @@
       <small
         *ngIf="newPasswordForm.get('password')?.errors?.['required']
           && newPasswordForm.get('password')!.touched"
-        class="p-error pt-1 pl-2">
-        Пароль обязателен к заполнению.
+        class="p-error pt-1">
+        Новый пароль обязателен к заполнению.
       </small>
       <small
         *ngIf="newPasswordForm.get('password')?.errors?.['minlength']
           && newPasswordForm.get('password')!.touched"
-        class="p-error pt-1 pl-2">
-        Пароль должен содержать минимум 6 символов.
+        class="p-error pt-1">
+        Новый пароль должен содержать минимум 6 символов.
       </small>
       <input
         [type]="signUpPasswordInputType"
@@ -94,16 +118,16 @@
       <small
         *ngIf="newPasswordForm.get('passwordConfirmation')?.errors?.['passwordMismatch']
         && newPasswordForm.get('passwordConfirmation')!.touched"
-        class="p-error pt-1 pl-2">
+        class="p-error pt-1">
         Пароли не совпадают.
       </small>
       <small
         *ngIf="newPasswordForm.get('passwordConfirmation')?.errors?.['required']
         && newPasswordForm.get('passwordConfirmation')!.touched"
-        class="p-error pt-1 pl-2">
+        class="p-error pt-1">
         Подтверждение пароля обязательно к заполнению.
       </small>
-      <small *ngIf="error" class="p-error pt-1 pl-2">
+      <small *ngIf="error" class="p-error pt-1">
         {{ error }}
       </small>
     </div>
